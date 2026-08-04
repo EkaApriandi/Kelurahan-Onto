@@ -86,12 +86,12 @@ export default function LoginAdmin() {
         className="w-full lg:w-1/2 text-white p-6 sm:p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden shadow-md lg:shadow-none bg-slate-950 bg-cover bg-center"
         style={{ backgroundImage: "url('/kantor-kelurahan.jpg')" }}
       >
-        {/* Layer Gradasi Warna Merah Khas Kelurahan Onto */}
-        <div className="absolute inset-0 bg-gradient-to-br from-red-950/95 via-red-900/90 to-rose-950/92 backdrop-blur-[1px]" />
+        {/* Layer Gradasi Transparan Transparansi Tipis agar Gambar Gedung Terlihat Sangat Jelas */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-red-950/50 to-slate-950/40" />
 
-        <div className="relative z-10">
+        <div className="relative z-10 drop-shadow-md">
           <div className="flex items-center gap-3 mb-4 lg:mb-8">
-            <div className="w-10 h-10 rounded-xl bg-white p-0.5 shadow-xs flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-white p-0.5 shadow-md flex items-center justify-center flex-shrink-0 border border-white/40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/logo-bantaeng.jpg"
@@ -100,19 +100,19 @@ export default function LoginAdmin() {
               />
             </div>
             <div>
-              <span className="text-sm font-extrabold text-white block leading-none">
+              <span className="text-sm font-extrabold text-white block leading-none drop-shadow-sm">
                 Kelurahan Onto
               </span>
-              <span className="text-[10px] font-semibold text-red-200 uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-red-200 uppercase tracking-wider block mt-1 drop-shadow-xs">
                 Kecamatan Bantaeng, Kab. Bantaeng
               </span>
             </div>
           </div>
 
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight mb-2 text-white">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight mb-2 text-white drop-shadow-md">
             Portal Halaman Pengurus
           </h1>
-          <p className="text-red-100 text-xs sm:text-sm leading-relaxed max-w-md">
+          <p className="text-slate-100 text-xs sm:text-sm leading-relaxed max-w-md font-medium drop-shadow-xs">
             Kelola berita, pengumuman publik, serta tanggapi pengaduan masyarakat Kelurahan Onto secara terpadu.
           </p>
         </div>
