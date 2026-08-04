@@ -114,7 +114,7 @@ export default async function ProfilDesa() {
               <span className="text-[11px] font-bold uppercase tracking-wider text-red-800 block mb-1">Visi</span>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 mb-2">Visi Kelurahan</h2>
               <p className="text-xs sm:text-sm text-slate-700 leading-relaxed text-justify bg-slate-50 p-3.5 rounded-lg border border-slate-100 font-medium">
-                "{profil?.visi ?? 'Visi belum diisi.'}"
+                &quot;{profil?.visi ?? 'Visi belum diisi.'}&quot;
               </p>
             </div>
 

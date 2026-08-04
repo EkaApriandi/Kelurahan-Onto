@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { loginAction } from '../actions';
 
 export default function LoginAdmin() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,17 +16,37 @@ export default function LoginAdmin() {
     setLoading(true);
     setError('');
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    // 1. Panggil Server Action agar HTTP Set-Cookie header dikirim langsung dari server ke browser
+    const res = await loginAction(email, password);
 
-    if (error) {
-      setError('Email atau kata sandi tidak sesuai.');
+    if (!res.success) {
+      console.error('Login Action Error:', res);
+      const msg = res.message || '';
+      const code = res.code || '';
+
+      if (msg.includes('Email not confirmed') || code === 'email_not_confirmed') {
+        setError('Email belum dikonfirmasi di Supabase. Silakan periksa inbox/spam email Anda, atau pastikan akun sudah dikonfirmasi di Supabase Dashboard (Authentication -> Users).');
+      } else if (msg.includes('Invalid login credentials') || code === 'invalid_credentials') {
+        setError('Email atau kata sandi tidak sesuai. Pastikan email dan password yang dimasukkan sudah terdaftar di Supabase Auth.');
+      } else if (msg.includes('User disabled') || code === 'user_disabled') {
+        setError('Akun pengurus ini telah dinonaktifkan.');
+      } else {
+        setError(`Gagal masuk (${res.message || 'Error tidak diketahui'}). Silakan periksa kredensial atau pengaturan Supabase Anda.`);
+      }
       setLoading(false);
       return;
     }
 
-    router.push('/admin');
-    router.refresh();
+    // 2. Sinkronkan juga ke browser client state
+    try {
+      const supabase = createClient();
+      await supabase.auth.signInWithPassword({ email, password });
+    } catch {
+      // Abaikan jika client sync opsional
+    }
+
+    // 3. Pindah ke halaman admin dengan reload penuh agar middleware & server components menerima cookie HTTP
+    window.location.href = '/admin';
   }
 
   return (

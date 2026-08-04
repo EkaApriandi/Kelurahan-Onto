@@ -2,6 +2,24 @@
 
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
+import { createClient as createServerSupabase } from '@/lib/supabase/server';
+
+export async function loginAction(email: string, password: string) {
+  const supabase = await createServerSupabase();
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    return { success: false, message: error.message, code: error.code };
+  }
+
+  return { success: true, user: data.user };
+}
+
+export async function logoutAction() {
+  const supabase = await createServerSupabase();
+  await supabase.auth.signOut();
+  return { success: true };
+}
 
 async function getAdminSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;

@@ -34,14 +34,22 @@ export async function middleware(request: NextRequest) {
   if (isAdminRoute && !isLoginRoute && !user) {
     const url = request.nextUrl.clone();
     url.pathname = '/admin/login';
-    return NextResponse.redirect(url);
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      response.cookies.set(cookie.name, cookie.value, cookie);
+    });
+    return response;
   }
 
   // Sudah login tapi buka halaman login -> lempar ke dashboard
   if (isLoginRoute && user) {
     const url = request.nextUrl.clone();
     url.pathname = '/admin';
-    return NextResponse.redirect(url);
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      response.cookies.set(cookie.name, cookie.value, cookie);
+    });
+    return response;
   }
 
   return supabaseResponse;
