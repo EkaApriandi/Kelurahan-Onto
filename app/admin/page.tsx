@@ -111,6 +111,19 @@ export default async function AdminDashboard() {
               Lihat laporan pengaduan masuk, ubah status, atau hapus pesan spam.
             </p>
           </Link>
+
+          <Link
+            href="/admin/pengaturan"
+            className="group p-4 rounded-xl border border-slate-200 hover:border-red-600 hover:shadow-xs transition bg-slate-50/50 hover:bg-white"
+          >
+            <div className="text-2xl mb-2">⚙️</div>
+            <h3 className="text-xs font-bold text-slate-900 group-hover:text-red-800 transition">
+              Pengaturan Akun
+            </h3>
+            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+              Ubah alamat email login dan kata sandi pengurus secara mandiri.
+            </p>
+          </Link>
         </div>
       </div>
     </AdminShell>

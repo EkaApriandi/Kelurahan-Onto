@@ -13,6 +13,7 @@ const MENU = [
   { href: '/admin/kependudukan', label: 'Kelola Data Kependudukan', ikon: '👥' },
   { href: '/admin/berita', label: 'Kelola Berita', ikon: '📰' },
   { href: '/admin/pengaduan', label: 'Kelola Pengaduan Warga', ikon: '📮' },
+  { href: '/admin/pengaturan', label: 'Pengaturan Akun', ikon: '⚙️' },
 ];
 
 export default function AdminShell({

@@ -24,6 +24,7 @@
    - [3.7 Modul Kelola Data Kependudukan (`/admin/kependudukan`)](#37-modul-kelola-data-kependudukan-adminkependudukan)
    - [3.8 Modul Kelola Berita & Upload Foto (`/admin/berita`)](#38-modul-kelola-berita--upload-foto-adminberita)
    - [3.9 Modul Kelola Pengaduan, Ekspor CSV & Cetak PDF (`/admin/pengaduan`)](#39-modul-kelola-pengaduan-ekspor-csv--cetak-pdf-adminpengaduan)
+   - [3.10 Modul Pengaturan Akun Admin (`/admin/pengaturan`)](#310-modul-pengaturan-akun-admin-adminpengaturan)
 4. [Panduan Administrasi Supabase Dashboard](#4-panduan-administrasi-supabase-dashboard)
    - [4.1 Manajemen Pengguna & Auto Confirm User](#41-manajemen-pengguna--auto-confirm-user)
    - [4.2 Pemulihan Akses & Reset Password Pengurus](#42-pemulihan-akses--reset-password-pengurus)
@@ -100,7 +101,7 @@ Sistem Informasi Kelurahan Onto dibangun menggunakan arsitektur modern Next.js A
 
 ### 3.3 Navigasi Ringkasan Dashboard Admin (`/admin`)
 * **Kartu Ringkasan Real-time**: Menampilkan total berita, layanan, pengaduan warga, total pegawai, RW/RT, dan demografi.
-* **Pintasan Aksi Cepat**: Tombol *Kelola Berita*, *Kelola Layanan*, *Kelola Pegawai*, *Kelola Pengaduan*, dll.
+* **Pintasan Aksi Cepat**: Tombol *Kelola Berita*, *Kelola Layanan*, *Kelola Pegawai*, *Kelola Pengaduan*, *Pengaturan Akun*, dll.
 * **Tabel Pengaduan Terbaru**: Menampilkan aduan terbaru yang membutuhkan penanganan.
 
 ### 3.4 Modul Kelola Profil Kelurahan (`/admin/profil`)
@@ -127,6 +128,25 @@ Sistem Informasi Kelurahan Onto dibangun menggunakan arsitektur modern Next.js A
 * **📥 Ekspor Data (CSV)**: Unduh seluruh data pengaduan warga ke file `.csv` untuk diaudit di Excel.
 * **🖨️ Cetak Laporan (PDF/Print)**: Cetak rekapitulasi pengaduan fisik untuk laporan resmi.
 
+### 3.10 Modul Pengaturan Akun Admin (`/admin/pengaturan`)
+Fitur ini memungkinkan pengurus kelurahan untuk memperbarui **Email Login** dan **Kata Sandi** secara mandiri tanpa harus mengakses Supabase Dashboard secara langsung.
+
+* **Cara Mengubah Kata Sandi (Password)**:
+  1. Masuk ke menu **"Pengaturan Akun"** (`⚙️`) pada sidebar navigasi admin.
+  2. Pada kartu **Ubah Kata Sandi**:
+     - Masukkan **Kata Sandi Baru** (minimal 6 karakter).
+     - Masukkan **Konfirmasi Kata Sandi Baru** (harus sama persis).
+  3. Klik **"Simpan Kata Sandi Baru"**.
+  4. Muncul notifikasi hijau `✅ Kata sandi Anda berhasil diperbarui!`. Gunakan kata sandi baru ini untuk login berikutnya.
+
+* **Cara Mengubah Alamat Email Login**:
+  1. Masuk ke menu **"Pengaturan Akun"** (`⚙️`).
+  2. Pada kartu **Ubah Alamat Email**:
+     - Lihat email aktif Anda saat ini.
+     - Masukkan **Alamat Email Baru** yang valid (misal: `pengurus.baru@email.com`).
+  3. Klik **"Simpan Email Baru"**.
+  4. Muncul notifikasi hijau `✅ Alamat email berhasil diperbarui!`.
+
 ---
 
 ## 4. PANDUAN ADMINISTRASI SUPABASE DASHBOARD
@@ -146,6 +166,8 @@ Sistem Informasi Kelurahan Onto dibangun menggunakan arsitektur modern Next.js A
 
 * **Q: Mengapa tombol login admin tidak ada di halaman utama?**
   * *Jawab*: Tautan sengaja disembunyikan demi keamanan agar masyarakat tidak sembarangan mencoba login. Admin cukup mengetik `/admin` di URL browser.
+* **Q: Bagaimana jika saya ingin mengubah password atau email pengurus?**
+  * *Jawab*: Buka menu **Pengaturan Akun** (`/admin/pengaturan`) di dalam Panel Admin untuk mengubah email dan password secara mandiri.
 * **Q: Apakah pengaduan warga bisa langsung diekspor ke Excel?**
   * *Jawab*: Ya, admin dapat mengklik tombol **Ekspor Data (CSV)** pada menu Kelola Pengaduan.
 

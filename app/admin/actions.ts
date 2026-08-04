@@ -21,6 +21,50 @@ export async function logoutAction() {
   return { success: true };
 }
 
+export async function updatePasswordAction(newPassword: string) {
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, message: 'Sesi Anda telah berakhir. Silakan login kembali.' };
+  }
+
+  if (!newPassword || newPassword.length < 6) {
+    return { success: false, message: 'Kata sandi baru minimal harus 6 karakter.' };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+  if (error) {
+    console.error('Error update password:', error);
+    return { success: false, message: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function updateEmailAction(newEmail: string) {
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, message: 'Sesi Anda telah berakhir. Silakan login kembali.' };
+  }
+
+  if (!newEmail || !newEmail.includes('@')) {
+    return { success: false, message: 'Alamat email tidak valid.' };
+  }
+
+  const { error } = await supabase.auth.updateUser({ email: newEmail });
+
+  if (error) {
+    console.error('Error update email:', error);
+    return { success: false, message: error.message };
+  }
+
+  return { success: true };
+}
+
 async function getAdminSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
