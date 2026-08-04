@@ -65,14 +65,14 @@ export default function Footer() {
             <div className="space-y-2 text-xs">
               <div className="flex justify-between items-center py-1 border-b border-slate-800">
                 <span className="text-slate-400 font-medium">Senin – Kamis</span>
-                <span className="font-semibold text-slate-200">08:00 – 16:00 WITA</span>
+                <span className="font-semibold text-slate-200">07:30 – 14:00 WITA</span>
               </div>
               <div className="flex justify-between items-center py-1 border-b border-slate-800">
                 <span className="text-slate-400 font-medium">Jumat</span>
-                <span className="font-semibold text-slate-200">08:00 – 16:30 WITA</span>
+                <span className="font-semibold text-slate-200">07:30 – 11:30 WITA</span>
               </div>
               <div className="flex justify-between items-center py-1">
-                <span className="text-slate-400 font-medium">Sabtu – Minggu</span>
+                <span className="text-slate-400 font-medium">Sabtu, Minggu & Libur</span>
                 <span className="font-semibold text-slate-400">Libur</span>
               </div>
             </div>
