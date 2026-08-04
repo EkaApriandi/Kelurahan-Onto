@@ -84,7 +84,7 @@ export default function LoginAdmin() {
       {/* Panel Banner Identitas (Latar Belakang Foto Kantor Kelurahan + Gradasi Merah Onto) */}
       <div
         className="w-full lg:w-1/2 text-white p-6 sm:p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden shadow-md lg:shadow-none bg-slate-950 bg-cover bg-center"
-        style={{ backgroundImage: "url('/kantor-kelurahan.jpg')" }}
+        style={{ backgroundImage: "url('/kantor-kelurahan.jpeg')" }}
       >
         {/* Layer Gradasi Transparan Transparansi Tipis agar Gambar Gedung Terlihat Sangat Jelas */}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-red-950/50 to-slate-950/40" />
