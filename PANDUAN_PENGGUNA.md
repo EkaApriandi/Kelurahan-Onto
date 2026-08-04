@@ -1,200 +1,153 @@
-# 📘 MODUL PANDUAN PENGGUNA & OPERASIONAL ADMIN
+# 📘 MODUL PANDUAN PENGGUNA & OPERASIONAL ADMIN LENGKAP
 ## Sistem Informasi & Portal Pelayanan Kelurahan Onto
 **Kecamatan Bantaeng, Kabupaten Bantaeng, Sulawesi Selatan**
 *Dikembangkan oleh KKN-T 116 Universitas Hasanuddin*
 
 ---
 
-## 📌 DAFTAR ISI
-1. [Pendahuluan & Gambaran Umum](#1-pendahuluan--gambaran-umum)
-2. [Panduan Penggunaan untuk Masyarakat (Publik)](#2-panduan-penggunaan-untuk-masyarakat-publik)
-   - [2.1 Menjelajahi Beranda Utama](#21-menjelajahi-beranda-utama)
-   - [2.2 Cek Persyaratan Layanan Surat](#22-cek-persyaratan-layanan-surat)
-   - [2.3 Melihat Profil & Struktur Perangkat Kelurahan](#23-melihat-profil--struktur-perangkat-kelurahan)
-   - [2.4 Memantau Data Kependudukan](#24-memantau-data-kependudukan)
-   - [2.5 Membaca Berita & Pengumuman](#25-membaca-berita--pengumuman)
-   - [2.6 Mengirim Pengaduan & Aspirasi Warga Online](#26-mengirim-pengaduan--aspirasi-warga-online)
-3. [Panduan Operasional untuk Pengurus (Administrator)](#3-panduan-operasional-untuk-pengurus-administrator)
-   - [3.1 Cara Mengakses Panel Admin (Discreet URL)](#31-cara-mengakses-panel-admin-discreet-url)
-   - [3.2 Alur Login & Penanganan Masalah Otentikasi](#32-alur-login--penanganan-masalah-otentikasi)
-   - [3.3 Mengelola Berita & Pengumuman Publik](#33-mengelola-berita--pengumuman-publik)
-   - [3.4 Mengelola Layanan Surat Administrasi](#34-mengelola-layanan-surat-administrasi)
-   - [3.5 Mengelola Data Kependudukan & Demografi](#35-mengelola-data-kependudukan--demografi)
-   - [3.6 Mengelola Data Pejabat, Pegawai, & Pengurus RW/RT](#36-mengelola-data-pejabat-pegawai--pengurus-rwrt)
-   - [3.7 Mengelola Profil, Visi Misi, & Batas Wilayah](#37-mengelola-profil-visi-misi--batas-wilayah)
-   - [3.8 Menanggapi Pengaduan Warga & Cetak Rekap CSV/PDF](#38-menanggapi-pengaduan-warga--cetak-rekap-csvpdf)
+## 📌 DAFTAR ISI COMPREHENSIVE
+1. [Pendahuluan & Arsitektur Sistem](#1-pendahuluan--arsitektur-sistem)
+2. [Panduan Penggunaan Halaman Publik (Masyarakat)](#2-panduan-penggunaan-halaman-publik-masyarakat)
+   - [2.1 Halaman Beranda Utama (`/`)](#21-halaman-beranda-utama-)
+   - [2.2 Halaman Profil Kelurahan (`/profil`)](#22-halaman-profil-kelurahan-profil)
+   - [2.3 Halaman Data Kependudukan (`/kependudukan`)](#23-halaman-data-kependudukan-kependudukan)
+   - [2.4 Halaman Layanan Publik & Surat (`/layanan`)](#24-halaman-layanan-publik--surat-layanan)
+   - [2.5 Halaman Berita & Pengumuman (`/berita`)](#25-halaman-berita--pengumuman-berita)
+   - [2.6 Halaman Kontak & Pengaduan Warga (`/kontak`)](#26-halaman-kontak--pengaduan-warga-kontak)
+3. [Panduan Operasional Pengurus (Panel Admin `/admin`)](#3-panduan-operasional-pengurus-panel-admin-admin)
+   - [3.1 Cara Mengakses Portal Pengurus (URL Discreet)](#31-cara-mengakses-portal-pengurus-url-discreet)
+   - [3.2 Alur Otentikasi Login & Pop-up Error Modal](#32-alur-otentikasi-login--pop-up-error-modal)
+   - [3.3 Navigasi Ringkasan Dashboard Admin (`/admin`)](#33-navigasi-ringkasan-dashboard-admin-admin)
+   - [3.4 Modul Kelola Profil Kelurahan (`/admin/profil`)](#34-modul-kelola-profil-kelurahan-adminprofil)
+   - [3.5 Modul Kelola Pejabat, Pegawai, & RW/RT (`/admin/pegawai`)](#35-modul-kelola-pejabat-pegawai--rwrt-adminpegawai)
+   - [3.6 Modul Kelola Layanan Surat (`/admin/layanan`)](#36-modul-kelola-layanan-surat-adminlayanan)
+   - [3.7 Modul Kelola Data Kependudukan (`/admin/kependudukan`)](#37-modul-kelola-data-kependudukan-adminkependudukan)
+   - [3.8 Modul Kelola Berita & Upload Foto (`/admin/berita`)](#38-modul-kelola-berita--upload-foto-adminberita)
+   - [3.9 Modul Kelola Pengaduan, Ekspor CSV & Cetak PDF (`/admin/pengaduan`)](#39-modul-kelola-pengaduan-ekspor-csv--cetak-pdf-adminpengaduan)
 4. [Panduan Administrasi Supabase Dashboard](#4-panduan-administrasi-supabase-dashboard)
-   - [4.1 Membuat Akun Pengurus Baru](#41-membuat-akun-pengurus-baru)
-   - [4.2 Mengatasi Masalah "Email Not Confirmed"](#42-mengatasi-masalah-email-not-confirmed)
-5. [Tanya Jawab & Pertanyaan Umum (FAQ)](#5-tanya-jawab--pertanyaan-umum-faq)
+   - [4.1 Manajemen Pengguna & Auto Confirm User](#41-manajemen-pengguna--auto-confirm-user)
+   - [4.2 Pemulihan Akses & Reset Password Pengurus](#42-pemulihan-akses--reset-password-pengurus)
+5. [Tanya Jawab & Troubleshooting (FAQ)](#5-tanya-jawab--troubleshooting-faq)
 
 ---
 
-## 1. PENDAHULUAN & GAMBARAN UMUM
+## 1. PENDAHULUAN & ARSITEKTUR SISTEM
 
-Sistem Informasi Kelurahan Onto adalah platform digital terpadu yang dirancang untuk mempermudah pelayanan publik, meningkatkan transparansi informasi desa/kelurahan, dan menyediakan saluran komunikasi langsung antara warga dengan Pemerintah Kelurahan Onto.
-
-### Hak Akses Sistem:
-* **Masyarakat / Pengunjung Publik**: Dapat mengakses seluruh informasi publik seperti berita, daftar persyaratan layanan, struktur organisasi, data kependudukan, serta dapat mengirimkan formulir pengaduan warga tanpa perlu login.
-* **Pengurus / Perangkat Kelurahan (Admin)**: Memiliki hak akses khusus untuk mengelola konten website, memperbarui data kependudukan, menambah berita, dan menanggapi pengaduan warga melalui Panel Admin.
+Sistem Informasi Kelurahan Onto dibangun menggunakan arsitektur modern Next.js App Router dan Supabase Cloud Database. Platform ini memisahkan antara **Halaman Publik** yang dapat diakses bebas oleh seluruh warga dan **Panel Admin** yang terproteksi otentikasi ketat.
 
 ---
 
-## 2. PANDUAN PENGGUNAAN UNTUK MASYARAKAT (PUBLIK)
+## 2. PANDUAN PENGGUNAAN HALAMAN PUBLIK (MASYARAKAT)
 
-### 2.1 Menjelajahi Beranda Utama
-1. Buka alamat website resmi Kelurahan Onto di browser Anda.
-2. Halaman beranda menampilkan **Banner Sambutan**, **Foto Kantor Kelurahan Onto**, **Sambutan Lurah**, **Ringkasan Layanan Surat**, **Kabar Berita Terbaru**, serta **Peta Lokasi Kantor**.
-3. Gunakan menu navigasi di bagian atas (*Header*) untuk berpindah ke halaman lain.
+### 2.1 Halaman Beranda Utama (`/`)
+* **Banner Hero**: Menampilkan ucapan selamat datang dengan latar belakang gedung Kantor Kelurahan Onto.
+* **Sambutan Lurah**: Pesan resmi dari Lurah Onto mengenai komitmen pelayanan.
+* **Widget Ringkasan Fitur**: Akses cepat ke Layanan Surat, Data Kependudukan, dan Pengaduan Warga.
+* **Statistik Ringkas Warga**: Jumlah penduduk, laki-laki, perempuan, dan Kepala Keluarga (KK).
+* **Pratinjau Berita Terbaru & Layanan Utama**: 3 Berita dan 3 Layanan teratas.
+* **Peta Embed Google Maps**: Menampilkan titik lokasi presisi Kantor Kelurahan Onto.
 
-### 2.2 Cek Persyaratan Layanan Surat
-1. Klik menu **"Layanan"** pada bar navigasi atas.
-2. Cari jenis surat yang ingin diurus (misalnya: *Surat Keterangan Tidak Mampu (SKTM)*, *Surat Keterangan Usaha*, *Surat Pengantar Nikah*, dll.).
-3. Gunakan kolom **Pencarian Instan** untuk mengetik nama surat yang dicari.
-4. Klik pada baris nama surat untuk melihat:
-   - **Persyaratan Berkas** (KTP, KK, Pengantar RT/RW, dll.)
-   - **Biaya Pengurusan** (Seluruh layanan gratis Rp 0)
-   - **Estimasi Waktu Penyelesaian**
-   - **Alur Prosedur** pengurusan.
+### 2.2 Halaman Profil Kelurahan (`/profil`)
+* **Sejarah & Tahun Berdiri**: Catatan sejarah berdirinya Kelurahan Onto.
+* **Visi & Misi**: Pokok visi dan poin misi pemerintah kelurahan.
+* **Geografis & Batas Wilayah**: Luas wilayah, topografi, serta batas wilayah (Utara, Selatan, Timur, Barat).
+* **Kartu Aparat Utama**: Foto, Nama, NIP, dan Jabatan Lurah, Sekretaris Kelurahan, Babinsa, serta Bhabinkamtibmas.
+* **Struktur Staf PNS & PPPK**: Daftar staf pendukung per seksi.
+* **Daftar Pengurus RW & RT**: Tabel alamat dan nama ketua RW/RT se-Kelurahan Onto.
 
-> 💡 **Tips Warga**: Siapkan seluruh berkas persyaratan sebelum datang ke Kantor Kelurahan Onto agar pengurusan surat dapat selesai lebih cepat.
+### 2.3 Halaman Data Kependudukan (`/kependudukan`)
+* **Kartu Indikator Utama**: Total Jiwa, Laki-laki, Perempuan, dan Kepala Keluarga.
+* **Grafik Demografi Interaktif**: Visualisasi statistik berdasarkan:
+  - Kelompok Umur (Anak, Remaja, Dewasa, Lansia)
+  - Agama & Kepercayaan
+  - Tingkat Pendidikan Terakhir
+  - Mata Pencaharian / Pekerjaan Utama Warga
+* **Tabel Sebaran Warga per RW**: Rincian jumlah jiwa dan KK per wilayah RW.
 
-### 2.3 Melihat Profil & Struktur Perangkat Kelurahan
-1. Klik menu **"Profil"** pada navigasi atas.
-2. Halaman ini berisi **Tahun Berdiri**, **Visi & Misi Kelurahan**, **Sejarah Kelurahan Onto**, dan **Batas Geografis Wilayah**.
-3. Pada bagian **Struktur Organisasi**, Anda dapat melihat daftar **Lurah**, **Sekretaris Kelurahan**, **Babinsa**, **Bhabinkamtibmas**, **Staf PNS/PPPK**, serta **Daftar Pengurus RW dan RT** beserta alamatnya.
+### 2.4 Halaman Layanan Publik & Surat (`/layanan`)
+* **Bar Pencarian Instan**: Ketik nama surat (misal: *SKTM*, *Usaha*, *Nikah*) untuk mencari berkas secara instan.
+* **Accordion Layanan Surat**: Klik nama surat untuk melihat:
+  - **Syarat Berkas** (KTP, KK, Pengantar RT/RW, dll.)
+  - **Biaya Pengurusan** (Seluruh layanan Rp 0 / Gratis)
+  - **Estimasi Waktu** & **Alur Prosedur**
+* **Jam Pelayanan Resmi Kantor**:
+  - **Senin – Kamis**: 07:30 – 14:00 WITA
+  - **Jumat**: 07:30 – 11:30 WITA
+  - **Sabtu, Minggu & Hari Libur**: Libur
+* **Kontak Petugas Pelayanan**: Nomor telepon/WA petugas pelayanan yang dapat dihubungi.
 
-### 2.4 Memantau Data Kependudukan
-1. Klik menu **"Data Kependudukan"**.
-2. Anda dapat melihat statistik grafik dan angka resmi mengenai:
-   - Jumlah Total Penduduk & Kepala Keluarga (KK).
-   - Rasio Jenis Kelamin (Laki-laki & Perempuan).
-   - Distribusi Kelompok Umur (Anak, Remaja, Dewasa, Lansia).
-   - Tingkat Pendidikan & Mata Pencaharian Warga.
-   - Distribusi Jumlah Warga per Wilayah RW.
+### 2.5 Halaman Berita & Pengumuman (`/berita`)
+* **Filter Kategori**: Filter berdasarkan *Pengumuman*, *Kegiatan Warga*, *Pembangunan*, dll.
+* **Pencarian Berita**: Kolom cari judul atau kata kunci berita.
+* **Detail Berita (`/berita/[slug]`)**: Membaca artikel lengkap beserta foto utama dan tanggal rilis.
 
-### 2.5 Membaca Berita & Pengumuman
-1. Klik menu **"Berita"**.
-2. Pilih filter kategori (misal: *Pengumuman*, *Kegiatan Warga*, *Pembangunan*, dll.).
-3. Klik pada salah satu judul berita untuk membaca isi berita lengkap beserta tanggal publikasi dan gambarnya.
-
-### 2.6 Mengirim Pengaduan & Aspirasi Warga Online
-1. Klik menu **"Kontak & Pengaduan"**.
-2. Pada formulir **Pengaduan / Aspirasi Warga**, isi data berikut:
-   - **Nama Lengkap** & **Nomor Telepon/WhatsApp**
-   - **Pilih RW / Wilayah Tempat Tinggal**
-   - **Kategori Pengaduan** (Fasilitas Umum, Keamanan, Administrasi, dll.)
-   - **Judul & Detail Isi Pengaduan**
-3. Klik **"Kirim Pengaduan Resmi"**.
-4. Pengaduan Anda akan masuk secara aman ke database dan langsung dapat ditinjau oleh pihak kelurahan.
-5. Anda juga dapat menghubungi kontak darurat **Babinsa** & **Bhabinkamtibmas** yang tertera pada halaman tersebut.
+### 2.6 Halaman Kontak & Pengaduan Warga (`/kontak`)
+* **Formulir Pengaduan Online**: Isi Nama, No HP/WA, Wilayah RW, Kategori, Judul, dan Detail Aduan.
+* **Kontak Pembina Wilayah**: Klik nomor Babinsa atau Bhabinkamtibmas untuk panggilan telepon langsung.
+* **Informasi Kontak Resmi**: Alamat jalan, email resmi, instagram resmi, dan Peta Google Maps.
 
 ---
 
-## 3. PANDUAN OPERASIONAL UNTUK PENGURUS (ADMINISTRATOR)
+## 3. PANDUAN OPERASIONAL PENGURUS (PANEL ADMIN `/admin`)
 
-### 3.1 Cara Mengakses Panel Admin (Discreet URL)
-Demi menjaga keamanan sistem, tautan masuk ke halaman admin tidak ditampilkan pada navigasi publik.
+### 3.1 Cara Mengakses Portal Pengurus (URL Discreet)
+1. Buka browser dan ketik URL rahasia: `https://domain-kelurahan.com/admin` atau `https://domain-kelurahan.com/admin/login`
+2. Halaman **Portal Pengurus** menampilkan latar belakang foto Kantor Kelurahan Onto dengan gradasi transparan merah maroon.
 
-1. Buka browser (Chrome, Edge, Safari, dll.).
-2. Ketikkan tautan rahasia berikut pada bilah alamat URL:
-   `https://domain-kelurahan.com/admin` atau `https://domain-kelurahan.com/admin/login`
-3. Tekan **Enter** untuk masuk ke halaman **Portal Pengurus**.
+### 3.2 Alur Otentikasi Login & Pop-up Error Modal
+1. Masukkan **Email** dan **Kata Sandi** terdaftar, lalu klik **"Masuk Panel Pengurus"**.
+2. **Pop-up Error Modal**: Jika otentikasi gagal, modal interaktif akan muncul menjelaskan penyebab spesifik (*Email Belum Dikonfirmasi*, *Kredensial Salah*, *Akun Dinonaktifkan*) beserta petunjuk solusinya.
 
-### 3.2 Alur Login & Penanganan Masalah Otentikasi
-1. Masukkan **Alamat Email** dan **Kata Sandi** pengurus yang sudah terdaftar.
-2. Klik tombol **"Masuk Panel Pengurus"**.
-3. Sistem akan memproses otentikasi secara aman melalui server.
-4. **Jika Login Berhasil**: Anda akan otomatis diarahkan ke **Dashboard Admin** (`/admin`).
-5. **Jika Login Gagal**:
-   - Layar akan menampilkan **Pop-up Error Modal** berisi informasi spesifik penyebab kegagalan dan saran perbaikannya.
-   - *Penyebab Umum*: Email belum dikonfirmasi di Supabase (`Email not confirmed`) atau ejaan kata sandi salah.
+### 3.3 Navigasi Ringkasan Dashboard Admin (`/admin`)
+* **Kartu Ringkasan Real-time**: Menampilkan total berita, layanan, pengaduan warga, total pegawai, RW/RT, dan demografi.
+* **Pintasan Aksi Cepat**: Tombol *Kelola Berita*, *Kelola Layanan*, *Kelola Pegawai*, *Kelola Pengaduan*, dll.
+* **Tabel Pengaduan Terbaru**: Menampilkan aduan terbaru yang membutuhkan penanganan.
 
-### 3.3 Mengelola Berita & Pengumuman Publik
-* Menu: **Dashboard Admin -> Kelola Berita** (`/admin/berita`)
-* **Menambah Berita Baru**:
-  1. Klik tombol **"+ Tambah Berita Baru"**.
-  2. Isi **Judul Berita**, **Kategori**, **Tanggal Kejadian**, dan **Isi Konten Berita**.
-  3. Upload/pilih **Gambar Utama Berita** (sistem otomatis mengompresi gambar).
-  4. Pilih status **"Publish"** agar langsung tampil di website atau **"Draft"** untuk disimpan terlebih dahulu.
-  5. Klik **"Simpan Berita"**.
-* **Mengedit / Menghapus Berita**:
-  - Klik tombol **"Edit"** di samping berita yang ingin diubah.
-  - Klik tombol **"Hapus"** (ikon tempat sampah) jika ingin menghapus berita dari sistem.
+### 3.4 Modul Kelola Profil Kelurahan (`/admin/profil`)
+* Mengubah Visi, Misi, Sejarah, Tahun Berdiri, Sambutan Lurah, Luas Wilayah, Topografi, serta Batas Wilayah (Utara, Selatan, Timur, Barat).
 
-### 3.4 Mengelola Layanan Surat Administrasi
-* Menu: **Dashboard Admin -> Kelola Layanan Surat** (`/admin/layanan`)
-* **Menambah / Mengedit Jenis Layanan**:
-  1. Klik **"+ Tambah Layanan Baru"** atau tombol **"Edit"** pada layanan yang ada.
-  2. Masukkan **Nama Layanan** (contoh: *Surat Keterangan Domisili*).
-  3. Masukkan **Syarat Berkas**, **Estimasi Waktu**, **Biaya** (default: *Gratis*), dan **Alur Prosedur**.
-  4. Klik **"Simpan Layanan"**.
+### 3.5 Modul Kelola Pejabat, Pegawai, & RW/RT (`/admin/pegawai`)
+* **Pejabat Utama**: Ubah Nama, NIP, dan Foto Lurah, Seklur, Babinsa, & Bhabinkamtibmas.
+* **Staf PNS & PPPK**: Tambah, Edit, atau Hapus staf pendukung per seksi.
+* **Pengurus RW & RT**: Kelola data Ketua RW dan RT se-Kelurahan Onto.
 
-### 3.5 Mengelola Data Kependudukan & Demografi
-* Menu: **Dashboard Admin -> Kelola Data Kependudukan** (`/admin/kependudukan`)
-* **Memperbarui Angka Statistik**:
-  1. Ubah angka pada kolom **Jumlah** sesuai hasil pendataan kependudukan terbaru (misal: *Jumlah Laki-laki*, *Perempuan*, *Total KK*, dll.).
-  2. Klik tombol **"Simpan Perubahan Data Demografi"**.
-  3. Statistik pada halaman publik akan langsung ter-update secara otomatis.
+### 3.6 Modul Kelola Layanan Surat (`/admin/layanan`)
+* **Tambah Layanan (`/admin/layanan/baru`)**: Buat jenis surat baru dengan memasukkan syarat berkas, estimasi waktu, biaya, dan alur.
+* **Edit & Hapus Layanan**: Perbarui persyaratan atau hapus layanan yang tidak berlaku lagi.
 
-### 3.6 Mengelola Data Pejabat, Pegawai, & Pengurus RW/RT
-* Menu: **Dashboard Admin -> Kelola Pejabat & Pegawai** (`/admin/pegawai`)
-* **Struktur Pejabat Utama & Staf**:
-  - Perbarui **Nama**, **NIP**, **Jabatan**, dan **URL Foto** untuk Lurah, Sekretaris Kelurahan, Babinsa, Bhabinkamtibmas, serta Staf PNS/PPPK.
-* **Pengurus Wilayah RW & RT**:
-  - Tambah atau edit nama **Ketua RW** dan **Ketua RT** beserta nomor wilayahnya.
-  - Klik **"Simpan Struktur Organisasi & Pegawai"**.
+### 3.7 Modul Kelola Data Kependudukan (`/admin/kependudukan`)
+* Memperbarui angka statistik kelompok umur, gender, pendidikan, pekerjaan, agama, dan data per RW.
 
-### 3.7 Mengelola Profil, Visi Misi, & Batas Wilayah
-* Menu: **Dashboard Admin -> Kelola Profil Kelurahan** (`/admin/profil`)
-* Masukkan atau perbarui teks **Visi**, **Misi**, **Sejarah Kelurahan**, **Tahun Berdiri**, **Sambutan Lurah**, dan **Batas Wilayah** (Utara, Selatan, Timur, Barat).
-* Klik **"Simpan Profil Kelurahan"**.
+### 3.8 Modul Kelola Berita & Upload Foto (`/admin/berita`)
+* **Tambah Berita (`/admin/berita/baru`)**: Upload foto utama (otomatis dikompresi), isi konten, tentukan kategori, dan atur status (*Publish* / *Draft*).
+* **Edit & Hapus Berita**: Kelola berita yang sudah terbit.
 
-### 3.8 Menanggapi Pengaduan Warga & Cetak Rekap CSV/PDF
-* Menu: **Dashboard Admin -> Kelola Pengaduan Warga** (`/admin/pengaduan`)
-* **Meninjau Pengaduan**:
-  - Daftar aduan masuk ditampilkan lengkap dengan nama warga, nomor telp/WA, lokasi RW, dan isi laporan.
-  - Ubah **Status Pengaduan**:
-    - `Belum Diproses` *(Label Kuning)*
-    - `Diproses` *(Label Biru)*
-    - `Selesai` *(Label Hijau)*
-* **Ekspor Rekap Laporan**:
-  - Klik tombol **"📥 Ekspor Data (CSV)"** untuk mendownload seluruh rekap aduan warga dalam format Excel/CSV.
-  - Klik tombol **"🖨️ Cetak Laporan (PDF/Print)"** untuk mencetak dokumen fisik rekap pengaduan.
+### 3.9 Modul Kelola Pengaduan, Ekspor CSV & Cetak PDF (`/admin/pengaduan`)
+* **Ubah Status Aduan**: Ubah status menjadi `Belum Diproses`, `Diproses`, atau `Selesai`.
+* **📥 Ekspor Data (CSV)**: Unduh seluruh data pengaduan warga ke file `.csv` untuk diaudit di Excel.
+* **🖨️ Cetak Laporan (PDF/Print)**: Cetak rekapitulasi pengaduan fisik untuk laporan resmi.
 
 ---
 
 ## 4. PANDUAN ADMINISTRASI SUPABASE DASHBOARD
 
-### 4.1 Membuat Akun Pengurus Baru
-Jika ada pengurus atau staf baru yang membutuhkan hak akses login admin:
+### 4.1 Manajemen Pengguna & Auto Confirm User
+1. Buka [Supabase Dashboard](https://supabase.com/dashboard) -> **Authentication** -> **Users**.
+2. Klik **"Add User"** -> **"Create User"**.
+3. Masukkan Email & Password, pastikan centang **"Auto Confirm User?"** dalam keadaan aktif.
 
-1. Buka [Supabase Dashboard](https://supabase.com/dashboard) dan pilih proyek Kelurahan Onto.
-2. Masuk ke menu **Authentication** -> **Users** pada bilah navigasi kiri.
-3. Klik tombol **"Add User"** (di kanan atas) -> pilih **"Create User"**.
-4. Masukkan **Alamat Email** dan **Password** pengurus baru.
-5. ⚠️ **PENTING**: Centang opsi **"Auto Confirm User?"** agar akun langsung bisa digunakan untuk login tanpa perlu verifikasi email manual.
-6. Klik **Create User**.
-
-### 4.2 Mengatasi Masalah "Email Not Confirmed"
-Jika pengguna menerima pesan kesalahan *"Email belum dikonfirmasi"* saat login:
-1. Masuk ke **Supabase Dashboard -> Authentication -> Users**.
-2. Cari email pengurus tersebut pada daftar.
-3. Klik tombol **`...`** (tiga titik) di sebelah kanan email.
-4. Pilih **"Confirm User"** / **"Confirm Email"**.
+### 4.2 Pemulihan Akses & Reset Password Pengurus
+* Jika pengguna belum terkonfirmasi, klik tombol **`...`** di baris user -> pilih **"Confirm User"**.
+* Untuk mereset kata sandi, klik tombol **`...`** -> pilih **"Send Password Reset"** atau ubah kata sandi secara manual.
 
 ---
 
-## 5. TANYA JAWAB & PERTANYAAN UMUM (FAQ)
+## 5. TANYA JAWAB & TROUBLESHOOTING (FAQ)
 
-* **Q: Bagaimana jika lupa kata sandi login admin?**
-  * *Jawab*: Administrator utama dapat mengubah kata sandi pengurus melalui Supabase Dashboard (**Authentication -> Users -> Reset Password / Change Password**).
-
-* **Q: Apakah website ini bisa diakses dengan baik melalui HP / Smartphone?**
-  * *Jawab*: Ya, seluruh halaman website (baik halaman publik maupun panel admin) sudah didesain fully responsive dan sangat nyaman dibuka di smartphone, tablet, maupun laptop.
-
-* **Q: Apakah data pengaduan warga aman?**
-  * *Jawab*: Ya, pengaduan disimpan di database terenkripsi Supabase dan hanya dapat dilihat oleh pengurus resmi melalui Panel Admin yang terlindungi otentikasi.
+* **Q: Mengapa tombol login admin tidak ada di halaman utama?**
+  * *Jawab*: Tautan sengaja disembunyikan demi keamanan agar masyarakat tidak sembarangan mencoba login. Admin cukup mengetik `/admin` di URL browser.
+* **Q: Apakah pengaduan warga bisa langsung diekspor ke Excel?**
+  * *Jawab*: Ya, admin dapat mengklik tombol **Ekspor Data (CSV)** pada menu Kelola Pengaduan.
 
 ---
 *Sistem Informasi Kelurahan Onto &copy; 2026 — Dikelola oleh Pemerintah Kelurahan Onto, Kab. Bantaeng*
