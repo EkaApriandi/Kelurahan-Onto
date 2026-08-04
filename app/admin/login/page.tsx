@@ -81,8 +81,14 @@ export default function LoginAdmin() {
         </Link>
       </div>
 
-      {/* Panel Banner Identitas */}
-      <div className="w-full lg:w-1/2 bg-gradient-to-br from-red-950 via-red-900 to-rose-950 text-white p-6 sm:p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden shadow-md lg:shadow-none">
+      {/* Panel Banner Identitas (Latar Belakang Foto Kantor Kelurahan + Gradasi Merah Onto) */}
+      <div
+        className="w-full lg:w-1/2 text-white p-6 sm:p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden shadow-md lg:shadow-none bg-slate-950 bg-cover bg-center"
+        style={{ backgroundImage: "url('/kantor-kelurahan.jpg')" }}
+      >
+        {/* Layer Gradasi Warna Merah Khas Kelurahan Onto */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-950/95 via-red-900/90 to-rose-950/92 backdrop-blur-[1px]" />
+
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-4 lg:mb-8">
             <div className="w-10 h-10 rounded-xl bg-white p-0.5 shadow-xs flex items-center justify-center flex-shrink-0">
@@ -106,33 +112,12 @@ export default function LoginAdmin() {
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight mb-2 text-white">
             Portal Halaman Pengurus
           </h1>
-          <p className="text-red-100 text-xs sm:text-sm leading-relaxed max-w-md mb-4">
+          <p className="text-red-100 text-xs sm:text-sm leading-relaxed max-w-md">
             Kelola berita, pengumuman publik, serta tanggapi pengaduan masyarakat Kelurahan Onto secara terpadu.
           </p>
-
-          {/* Kartu Foto Kantor Kelurahan Onto */}
-          <div className="relative rounded-2xl overflow-hidden border border-red-500/30 shadow-xl group my-4">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/kantor-kelurahan.jpg"
-              alt="Foto Kantor Kelurahan Onto"
-              className="w-full h-44 sm:h-52 lg:h-60 object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent flex flex-col justify-end p-4">
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-red-200 bg-red-950/80 border border-red-700/60 px-2.5 py-0.5 rounded-full w-max mb-1 backdrop-blur-xs">
-                🏛️ Kantor Kelurahan Onto
-              </span>
-              <p className="text-xs font-extrabold text-white leading-tight">
-                Kecamatan Bantaeng, Kabupaten Bantaeng
-              </p>
-              <p className="text-[10px] font-medium text-slate-300 mt-0.5">
-                Pusat Operasional & Pelayanan Masyarakat Terpadu
-              </p>
-            </div>
-          </div>
         </div>
 
-        <div className="hidden lg:flex relative z-10 border-t border-red-800/60 pt-3 text-xs text-red-200 justify-between items-center mt-4">
+        <div className="hidden lg:flex relative z-10 border-t border-red-800/60 pt-3 text-xs text-red-200 justify-between items-center mt-6">
           <p>&copy; Sistem Informasi Kelurahan Onto</p>
           <p className="font-semibold">KKN-T 116 Universitas Hasanuddin</p>
         </div>

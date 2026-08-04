@@ -65,23 +65,12 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Akses Masuk Pengurus */}
-          <div className="flex items-center gap-2">
-            <Link
-              href="/admin/login"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-red-800 bg-slate-100 hover:bg-slate-200/80 rounded-lg transition"
-            >
-              <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 08-8 0v4h8z" />
-              </svg>
-              <span>Halaman Pengurus</span>
-            </Link>
-
-            {/* Tombol Menu Seluler */}
+          {/* Tombol Menu Seluler (Di layar kecil) */}
+          <div className="lg:hidden flex items-center">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100"
+              className="p-2 rounded-lg text-slate-700 hover:bg-slate-100"
               aria-label="Buka Menu"
             >
               {mobileMenuOpen ? (
@@ -118,18 +107,6 @@ export default function Navbar() {
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-slate-100">
-            <Link
-              href="/admin/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-2 text-xs font-semibold text-slate-700 bg-slate-100 rounded-lg"
-            >
-              <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 08-8 0v4h8z" />
-              </svg>
-              Halaman Pengurus Kelurahan
-            </Link>
-          </div>
         </div>
       )}
     </header>
