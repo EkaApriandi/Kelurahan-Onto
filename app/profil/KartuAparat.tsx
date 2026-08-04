@@ -3,8 +3,8 @@ type KartuAparatProps = {
   jabatan: string;
   nip?: string | null;
   fotoUrl?: string | null;
-  kosong?: boolean;   // true kalau slot ini memang belum ada orangnya, tapi layout tetap tampil
-  variant?: 'orang' | 'kasi'; // 'kasi' = kartu penanda seksi, bukan kartu orang
+  kosong?: boolean;
+  variant?: 'orang' | 'kasi';
 };
 
 export default function KartuAparat({
@@ -15,49 +15,46 @@ export default function KartuAparat({
   kosong,
   variant = 'orang',
 }: KartuAparatProps) {
-  // Kartu penanda Kasi/Seksi — beda gaya biar jelas ini bukan kartu orang
   if (variant === 'kasi') {
     return (
-      <div className="rounded-lg overflow-hidden shadow-sm border border-blue-100 bg-white">
-        <div className="w-full aspect-[3/4] bg-blue-50 flex items-center justify-center">
-          <span className="text-4xl">🏢</span>
-        </div>
-        <div className="bg-blue-100 px-3 py-2 text-center">
-          <p className="text-[10px] text-blue-500 uppercase tracking-wide">Seksi</p>
-          <p className="text-sm font-bold text-blue-800 leading-tight">{nama}</p>
-        </div>
+      <div className="rounded-xl overflow-hidden border border-red-200 bg-red-50/60 p-4 text-center">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-red-700 block mb-1">
+          Penanggung Jawab
+        </span>
+        <p className="text-xs font-bold text-slate-800 leading-snug">{nama}</p>
       </div>
     );
   }
 
   if (kosong) {
     return (
-      <div className="rounded-lg overflow-hidden shadow-sm border border-dashed border-gray-200 bg-white">
-        <div className="w-full aspect-[3/4] bg-gray-50 flex items-center justify-center">
-          <span className="text-gray-300 text-2xl">—</span>
-        </div>
-        <div className="bg-gray-100 px-3 py-2 text-center">
-          <p className="text-sm font-medium text-gray-400">Belum ada data</p>
-          <p className="text-xs text-gray-400 mt-0.5">{jabatan}</p>
-        </div>
+      <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/50 p-4 text-center">
+        <p className="text-xs font-medium text-slate-400">Belum diisi</p>
+        <p className="text-[11px] text-slate-400 mt-0.5">{jabatan}</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg overflow-hidden shadow-sm border border-gray-100 bg-white">
-      {fotoUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={fotoUrl} alt={nama} className="w-full aspect-[3/4] object-cover" />
-      ) : (
-        <div className="w-full aspect-[3/4] bg-blue-50 flex items-center justify-center">
-          <span className="text-3xl font-semibold text-blue-700">{nama.charAt(0)}</span>
-        </div>
-      )}
-      <div className="bg-gray-800 px-3 py-2 text-center">
-        <p className="text-sm font-semibold text-white leading-tight">{nama}</p>
-        <p className="text-xs text-gray-300 mt-0.5">{jabatan}</p>
-        {nip && <p className="text-[10px] text-gray-400 mt-0.5">{nip}</p>}
+    <div className="rounded-xl overflow-hidden border border-slate-200 bg-white hover:border-red-300 transition flex flex-col">
+      <div className="w-full aspect-[3/4] bg-slate-100 overflow-hidden">
+        {fotoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={fotoUrl}
+            alt={nama}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-red-50 flex items-center justify-center">
+            <span className="text-3xl font-bold text-red-700">{nama.charAt(0)}</span>
+          </div>
+        )}
+      </div>
+      <div className="p-3 bg-slate-900 text-center flex-1 flex flex-col justify-center">
+        <p className="text-xs font-bold text-white leading-tight line-clamp-1">{nama}</p>
+        <p className="text-[11px] text-red-300 font-medium mt-0.5">{jabatan}</p>
+        {nip && <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{nip}</p>}
       </div>
     </div>
   );

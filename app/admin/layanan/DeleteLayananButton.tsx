@@ -2,19 +2,19 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { hapusBeritaAction } from '../actions';
+import { hapusLayananAction } from '../actions';
 
-export default function DeleteBeritaButton({ id, judul }: { id: number; judul: string }) {
+export default function DeleteLayananButton({ id, nama }: { id: number; nama: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function handleDelete() {
-    if (!confirm(`Hapus berita "${judul}"? Tindakan ini tidak dapat dibatalkan.`)) return;
+    if (!confirm(`Hapus layanan "${nama}"? Tindakan ini tidak dapat dibatalkan.`)) return;
 
     setLoading(true);
-    const res = await hapusBeritaAction(id);
+    const res = await hapusLayananAction(id);
     if (!res.success) {
-      alert('Gagal menghapus berita: ' + res.message);
+      alert('Gagal menghapus layanan: ' + res.message);
     }
     setLoading(false);
     router.refresh();

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import ChartDemografi from './ChartDemografi';
 
@@ -24,78 +23,71 @@ async function getData() {
 export default async function DataKependudukan() {
   const { rtRws, usia, pendidikan, pekerjaan } = await getData();
 
+  const totalKk = rtRws.reduce((sum, item) => sum + (item.jumlah_kk ?? 0), 0);
+  const totalL = rtRws.reduce((sum, item) => sum + (item.jumlah_l ?? 0), 0);
+  const totalP = rtRws.reduce((sum, item) => sum + (item.jumlah_p ?? 0), 0);
+  const totalPenduduk = totalL + totalP;
+
   return (
-    <main className="bg-gray-50 text-gray-800 font-sans">
-      {/* Navbar */}
-      <nav className="bg-white shadow-md py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-blue-700">
-            Kelurahan Onto
-          </Link>
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-            <Link href="/" className="hover:text-blue-700">Beranda</Link>
-            <Link href="/profil" className="hover:text-blue-700">Profil</Link>
-            <Link href="/kependudukan" className="text-blue-700">Data kependudukan</Link>
-            <Link href="/layanan" className="hover:text-blue-700">Layanan</Link>
-            <Link href="/kontak" className="hover:text-blue-700">Kontak</Link>
-          </div>
+    <main className="bg-slate-50 text-slate-800 pb-16">
+      {/* Banner - Samakan Warna dengan Layanan (bg-slate-900) */}
+      <section className="bg-slate-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-300 bg-white/10 px-3 py-1 rounded-md">
+            Data Statistik
+          </span>
+          <h1 className="text-3xl font-extrabold tracking-tight mt-3 text-white">
+            Data & Grafik Kependudukan
+          </h1>
+          <p className="text-sm text-slate-300 mt-2 max-w-2xl">
+            Informasi demografi warga, distribusi gender, kelompok usia, tingkat pendidikan, dan mata pencaharian di Kelurahan Onto.
+          </p>
         </div>
-      </nav>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-2xl font-bold mb-8">Data & Statistik Kependudukan</h2>
-
-        {/* Tabel data kependudukan */}
-        <div className="mb-10">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
-                <tr>
-                  <th className="text-left px-4 py-2">RT/RW</th>
-                  <th className="text-right px-4 py-2">Jumlah KK</th>
-                  <th className="text-right px-4 py-2">Laki-laki</th>
-                  <th className="text-right px-4 py-2">Perempuan</th>
-                  <th className="text-right px-4 py-2">Total Jiwa</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {rtRws.length > 0 ? (
-                  rtRws.map((rt) => (
-                    <tr key={rt.id}>
-                      <td className="px-4 py-2">
-                        {rt.nomor_rt === '—' ? rt.nomor_rw : `RT ${rt.nomor_rt} / RW ${rt.nomor_rw}`}
-                      </td>
-                      <td className="px-4 py-2 text-right">{rt.jumlah_kk}</td>
-                      <td className="px-4 py-2 text-right">{rt.jumlah_l}</td>
-                      <td className="px-4 py-2 text-right">{rt.jumlah_p}</td>
-                      <td className="px-4 py-2 text-right font-medium">{rt.jumlah_l + rt.jumlah_p}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-6 text-center text-gray-400">
-                      Belum ada data RT/RW.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        {/* Ringkasan Statistik */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white p-5 rounded-xl shadow-xs border border-slate-200 text-center">
+            <p className="text-xs font-bold text-slate-400 uppercase">Total Jiwa</p>
+            <p className="text-2xl font-extrabold text-red-800 mt-1">
+              {totalPenduduk.toLocaleString('id-ID')}
+            </p>
           </div>
-        </div>
+
+          <div className="bg-white p-5 rounded-xl shadow-xs border border-slate-200 text-center">
+            <p className="text-xs font-bold text-slate-400 uppercase">Total KK</p>
+            <p className="text-2xl font-extrabold text-red-800 mt-1">
+              {totalKk.toLocaleString('id-ID')}
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl shadow-xs border border-slate-200 text-center">
+            <p className="text-xs font-bold text-slate-400 uppercase">Laki-Laki</p>
+            <p className="text-2xl font-extrabold text-slate-800 mt-1">
+              {totalL.toLocaleString('id-ID')}
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl shadow-xs border border-slate-200 text-center">
+            <p className="text-xs font-bold text-slate-400 uppercase">Perempuan</p>
+            <p className="text-2xl font-extrabold text-slate-800 mt-1">
+              {totalP.toLocaleString('id-ID')}
+            </p>
+          </div>
+        </section>
 
         {/* Grafik Demografi */}
-        <div className="mb-6">
-          <h3 className="text-sm uppercase tracking-wide text-gray-400 mb-4">Grafik Demografi</h3>
+        <section className="bg-white rounded-xl p-6 shadow-xs border border-slate-200">
+          <div className="mb-4">
+            <h2 className="text-lg font-bold text-slate-900">Grafik & Statistik Demografi</h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Grafik distribusi kelompok usia, tingkat pendidikan, dan mata pencaharian warga.
+            </p>
+          </div>
           <ChartDemografi usia={usia} pendidikan={pendidikan} pekerjaan={pekerjaan} />
-        </div>
+        </section>
       </div>
-
-      <footer className="bg-gray-800 text-gray-300 py-6 text-center mt-12">
-        <p className="text-sm">
-          &copy; {new Date().getFullYear()} Sistem Informasi Kelurahan Onto. Dibuat oleh Mahasiswa
-          KKN.
-        </p>
-      </footer>
     </main>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { simpanBeritaAction } from '../actions';
 
 type BeritaData = {
   id?: number;
@@ -34,14 +34,14 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
       slug: '',
       konten: '',
       kategori: 'Kegiatan Kelurahan',
-      status: 'draft',
+      status: 'publish', // Default Terbit agar berita langsung tampil
       gambar: null,
       tanggal_kejadian: new Date().toISOString().slice(0, 10),
     }
   );
   const [slugManual, setSlugManual] = useState(isEdit);
-  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [compressing, setCompressing] = useState(false);
   const [error, setError] = useState('');
 
   function handleJudulChange(judul: string) {
@@ -52,23 +52,57 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
     }));
   }
 
-  async function handleUploadFoto(file: File) {
-    setUploading(true);
+  function handleFileChange(file: File) {
+    setCompressing(true);
     setError('');
-    const supabase = createClient();
 
-    const namaFile = `${Date.now()}-${buatSlug(file.name.replace(/\.[^/.]+$/, ''))}.${file.name.split('.').pop()}`;
-    const { error: uploadError } = await supabase.storage.from('berita').upload(namaFile, file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_SIZE = 1000;
+        let width = img.width;
+        let height = img.height;
 
-    if (uploadError) {
-      setError('Gagal upload foto: ' + uploadError.message);
-      setUploading(false);
-      return;
-    }
+        if (width > height) {
+          if (width > MAX_SIZE) {
+            height = Math.round((height * MAX_SIZE) / width);
+            width = MAX_SIZE;
+          }
+        } else {
+          if (height > MAX_SIZE) {
+            width = Math.round((width * MAX_SIZE) / height);
+            height = MAX_SIZE;
+          }
+        }
 
-    const { data: urlData } = supabase.storage.from('berita').getPublicUrl(namaFile);
-    setForm((f) => ({ ...f, gambar: urlData.publicUrl }));
-    setUploading(false);
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+          setForm((f) => ({ ...f, gambar: compressedBase64 }));
+        }
+        setCompressing(false);
+      };
+
+      img.onerror = () => {
+        setError('Gagal memproses file gambar.');
+        setCompressing(false);
+      };
+
+      img.src = e.target?.result as string;
+    };
+
+    reader.onerror = () => {
+      setError('Gagal membaca file gambar.');
+      setCompressing(false);
+    };
+
+    reader.readAsDataURL(file);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -76,23 +110,19 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
     setSaving(true);
     setError('');
 
-    const supabase = createClient();
-    const payload = {
+    const res = await simpanBeritaAction({
+      id: data?.id,
       judul: form.judul,
-      slug: form.slug,
+      slug: form.slug || buatSlug(form.judul),
       konten: form.konten,
       kategori: form.kategori,
       status: form.status,
       gambar: form.gambar,
       tanggal_kejadian: form.tanggal_kejadian,
-    };
+    });
 
-    const { error: dbError } = isEdit
-      ? await supabase.from('berita').update(payload).eq('id', data!.id)
-      : await supabase.from('berita').insert(payload);
-
-    if (dbError) {
-      setError('Gagal menyimpan: ' + dbError.message);
+    if (!res.success) {
+      setError('Gagal menyimpan berita: ' + (res.message ?? 'Terjadi kesalahan.'));
       setSaving(false);
       return;
     }
@@ -102,24 +132,24 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
   }
 
   const inputClass =
-    'w-full text-sm text-gray-900 rounded-lg border border-gray-300 px-3.5 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition';
+    'w-full text-xs sm:text-sm text-slate-900 rounded-lg border border-slate-300 px-3.5 py-2.5 outline-hidden focus:border-red-600 focus:ring-2 focus:ring-red-100 transition bg-white';
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5 max-w-2xl">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5 max-w-2xl bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Judul</label>
+        <label className="block text-xs font-bold text-slate-700 mb-1.5">Judul Berita</label>
         <input
           type="text"
           required
           value={form.judul}
           onChange={(e) => handleJudulChange(e.target.value)}
           className={inputClass}
-          placeholder="Judul berita"
+          placeholder="Masukkan judul berita atau pengumuman..."
         />
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Slug (URL)</label>
+        <label className="block text-xs font-bold text-slate-700 mb-1.5">Slug URL Halaman</label>
         <input
           type="text"
           required
@@ -130,14 +160,14 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
           }}
           className={`${inputClass} font-mono text-xs`}
         />
-        <p className="text-xs text-gray-400 mt-1.5">
-          Otomatis dari judul. Bisa diedit manual kalau perlu.
+        <p className="text-[11px] text-slate-400 mt-1">
+          Dibuat otomatis dari judul. Dapat disunting manual jika diperlukan.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
+          <label className="block text-xs font-bold text-slate-700 mb-1.5">Kategori Berita</label>
           <select
             value={form.kategori}
             onChange={(e) => setForm({ ...form, kategori: e.target.value })}
@@ -148,20 +178,20 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+          <label className="block text-xs font-bold text-slate-700 mb-1.5">Status Publikasi</label>
           <select
             value={form.status}
             onChange={(e) => setForm({ ...form, status: e.target.value })}
             className={inputClass}
           >
-            <option value="draft">Draf (belum tampil di website)</option>
-            <option value="publish">Terbit (tampil di website)</option>
+            <option value="publish">Terbit (Langsung Tampil di Website)</option>
+            <option value="draft">Draf Simpanan (Belum Tampil)</option>
           </select>
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Tanggal Kejadian</label>
+        <label className="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Kejadian</label>
         <input
           type="date"
           value={form.tanggal_kejadian ?? ''}
@@ -171,51 +201,69 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Isi Berita</label>
+        <label className="block text-xs font-bold text-slate-700 mb-1.5">Isi Berita / Artikel</label>
         <textarea
           required
           rows={8}
           value={form.konten}
           onChange={(e) => setForm({ ...form, konten: e.target.value })}
-          className={`${inputClass} resize-none`}
-          placeholder="Tulis isi berita di sini..."
+          className={`${inputClass} resize-none leading-relaxed`}
+          placeholder="Tuliskan isi artikel berita secara lengkap..."
         />
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Foto</label>
+        <label className="block text-xs font-bold text-slate-700 mb-1.5">Gambar / Foto Berita (Opsional)</label>
+        
+        {/* Pratinjau Gambar */}
         {form.gambar && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={form.gambar} alt="Preview" className="w-full max-w-xs rounded-lg mb-3 border border-gray-200" />
+          <div className="mb-3 relative max-w-xs group">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={form.gambar} alt="Pratinjau Foto" className="w-full max-h-48 object-cover rounded-lg border border-slate-200 shadow-2xs" />
+            <button
+              type="button"
+              onClick={() => setForm((f) => ({ ...f, gambar: null }))}
+              className="mt-1 text-[11px] font-bold text-red-700 hover:underline cursor-pointer"
+            >
+              Hapus Gambar Ini
+            </button>
+          </div>
         )}
+
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => e.target.files?.[0] && handleUploadFoto(e.target.files[0])}
-          className="text-sm text-gray-600"
-          disabled={uploading}
+          disabled={compressing}
+          onChange={(e) => e.target.files?.[0] && handleFileChange(e.target.files[0])}
+          className="text-xs text-slate-600 cursor-pointer block w-full border border-slate-200 rounded-lg p-2 bg-slate-50"
         />
-        {uploading && <p className="text-xs text-blue-600 mt-1.5">Mengunggah foto...</p>}
+        {compressing ? (
+          <p className="text-[11px] font-bold text-red-800 mt-1">Mengompresi & merapikan foto...</p>
+        ) : (
+          <p className="text-[11px] text-slate-400 mt-1">
+            Foto otomatis dikompres secara instan agar penyimpanan cepat dan lancar.
+          </p>
+        )}
       </div>
 
       {error && (
-        <p className="text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg px-3.5 py-2.5">
+        <div className="text-xs font-semibold text-red-700 bg-red-50 border border-red-200 rounded-lg p-3">
           {error}
-        </p>
+        </div>
       )}
 
-      <div className="flex gap-3">
+      <div className="flex items-center gap-3 pt-2">
         <button
           type="submit"
-          disabled={saving || uploading}
-          className="bg-blue-700 text-white text-sm font-bold px-6 py-2.5 rounded-lg hover:bg-blue-800 disabled:opacity-50 transition"
+          disabled={saving || compressing}
+          className="bg-red-800 text-white text-xs font-bold px-6 py-2.5 rounded-lg hover:bg-red-900 disabled:opacity-50 transition shadow-xs cursor-pointer"
         >
-          {saving ? 'Menyimpan...' : isEdit ? 'Simpan Perubahan' : 'Tambah Berita'}
+          {saving ? 'Menyimpan Berita...' : isEdit ? 'Simpan Perubahan' : 'Terbitkan Berita Baru'}
         </button>
         <button
           type="button"
           onClick={() => router.push('/admin/berita')}
-          className="text-sm font-medium text-gray-600 px-6 py-2.5 rounded-lg hover:bg-gray-100 transition"
+          className="text-xs font-bold text-slate-600 px-5 py-2.5 rounded-lg hover:bg-slate-100 transition cursor-pointer"
         >
           Batal
         </button>
