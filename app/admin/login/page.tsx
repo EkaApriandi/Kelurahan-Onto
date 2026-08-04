@@ -117,7 +117,7 @@ export default function LoginAdmin() {
           </p>
         </div>
 
-        <div className="hidden lg:flex relative z-10 border-t border-red-800/60 pt-3 text-xs text-red-200 justify-between items-center mt-6">
+        <div className="hidden lg:flex relative z-10 pt-3 text-xs text-slate-200 justify-between items-center mt-6 drop-shadow-xs">
           <p>&copy; Sistem Informasi Kelurahan Onto</p>
           <p className="font-semibold">KKN-T 116 Universitas Hasanuddin</p>
         </div>
