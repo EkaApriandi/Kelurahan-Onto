@@ -106,12 +106,33 @@ export default function LoginAdmin() {
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight mb-2 text-white">
             Portal Halaman Pengurus
           </h1>
-          <p className="text-red-100 text-xs sm:text-sm leading-relaxed max-w-md">
+          <p className="text-red-100 text-xs sm:text-sm leading-relaxed max-w-md mb-4">
             Kelola berita, pengumuman publik, serta tanggapi pengaduan masyarakat Kelurahan Onto secara terpadu.
           </p>
+
+          {/* Kartu Foto Kantor Kelurahan Onto */}
+          <div className="relative rounded-2xl overflow-hidden border border-red-500/30 shadow-xl group my-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/kantor-kelurahan.jpg"
+              alt="Foto Kantor Kelurahan Onto"
+              className="w-full h-44 sm:h-52 lg:h-60 object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent flex flex-col justify-end p-4">
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-red-200 bg-red-950/80 border border-red-700/60 px-2.5 py-0.5 rounded-full w-max mb-1 backdrop-blur-xs">
+                🏛️ Kantor Kelurahan Onto
+              </span>
+              <p className="text-xs font-extrabold text-white leading-tight">
+                Kecamatan Bantaeng, Kabupaten Bantaeng
+              </p>
+              <p className="text-[10px] font-medium text-slate-300 mt-0.5">
+                Pusat Operasional & Pelayanan Masyarakat Terpadu
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="hidden lg:flex relative z-10 border-t border-red-800/60 pt-3 text-xs text-red-200 justify-between items-center mt-6">
+        <div className="hidden lg:flex relative z-10 border-t border-red-800/60 pt-3 text-xs text-red-200 justify-between items-center mt-4">
           <p>&copy; Sistem Informasi Kelurahan Onto</p>
           <p className="font-semibold">KKN-T 116 Universitas Hasanuddin</p>
         </div>
