@@ -34,7 +34,7 @@ export default function DemografiForm({ items }: { items: DemografiItem[] }) {
     setSuccess(false);
 
     const res = await updateDemografiAction(
-      data.map((item) => ({ id: item.id, jumlah: Number(item.jumlah) }))
+      data.map((item) => ({ id: item.id, jumlah: Number(item.jumlah), kategori: item.kategori, label: item.label }))
     );
 
     if (!res.success) {

@@ -19,7 +19,7 @@ export default async function AdminPegawaiPage() {
     supabase
       .from('pengurus_wilayah')
       .select('*')
-      .order('urutan'),
+      .order('nomor_rw'),
   ]);
 
   const profil = resProfil.data;
@@ -27,18 +27,12 @@ export default async function AdminPegawaiPage() {
 
   return (
     <AdminShell title="Kelola Struktur Pejabat, Pegawai & RW/RT" userEmail={user?.email ?? ''}>
-      {profil ? (
-        <PegawaiManager
-          profilId={profil.id}
-          initialStruktur={profil.struktur_organisasi ?? []}
-          initialStrukturLengkap={profil.struktur_lengkap ?? []}
-          initialPengurus={pengurus}
-        />
-      ) : (
-        <div className="bg-white p-6 rounded-xl border border-slate-200 text-xs text-slate-500">
-          Data profil kelurahan tidak ditemukan.
-        </div>
-      )}
+      <PegawaiManager
+        profilId={profil?.id ?? 1}
+        initialStruktur={profil?.struktur_organisasi ?? []}
+        initialStrukturLengkap={profil?.struktur_lengkap ?? []}
+        initialPengurus={pengurus}
+      />
     </AdminShell>
   );
 }

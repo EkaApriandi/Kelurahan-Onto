@@ -24,13 +24,24 @@ export default async function AdminProfilPage() {
         </p>
       </div>
 
-      {profil ? (
-        <ProfilForm initialData={profil} />
-      ) : (
-        <div className="bg-white p-6 rounded-xl border border-slate-200 text-xs text-slate-500">
-          Data profil kelurahan tidak ditemukan.
-        </div>
-      )}
+      <ProfilForm
+        initialData={
+          profil ?? {
+            id: 1,
+            tahun_berdiri: '1997',
+            visi: 'Mewujudkan Kelurahan Onto yang Maju, Sejahtera, Mandiri, Berbudaya, dan Pelayanan Publik Unggul.',
+            misi: '1. Meningkatkan kualitas pelayanan publik berbasis digital yang cepat dan akuntabel.\n2. Memberdayakan ekonomi warga berbasis potensi lokal dan pertanian.\n3. Pembangunan sarana dan prasarana lingkungan kelurahan yang merata.\n4. Memperkuat nilai gotong royong dan ketenteraman warga.',
+            sejarah: 'Kelurahan Onto merupakan salah satu wilayah kelurahan bersejarah di Kecamatan Bantaeng, Kabupaten Bantaeng, Sulawesi Selatan.',
+            sambutan_lurah: 'Assalamu Alaikum Warahmatullahi Wabarakatuh.\nSelamat datang di portal resmi Kelurahan Onto. Kami siap memberikan pelayanan terbaik bagi seluruh warga.',
+            luas_wilayah: '4,69 km²',
+            topografi: 'Perbukitan dan lereng gunung yang landai',
+            batas_utara: 'Desa Campaga',
+            batas_selatan: 'Kelurahan Karatuang',
+            batas_timur: 'Kelurahan Tappanjeng',
+            batas_barat: 'Desa Ereng-Ereng',
+          }
+        }
+      />
     </AdminShell>
   );
 }

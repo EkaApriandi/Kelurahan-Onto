@@ -66,9 +66,11 @@ export async function updateEmailAction(newEmail: string) {
 }
 
 async function getAdminSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  return createSupabaseClient(url, key);
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    return createSupabaseClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY);
+  }
+  return await createServerSupabase();
 }
 
 export async function simpanBeritaAction(payload: {
@@ -201,9 +203,11 @@ export async function simpanProfilAction(payload: {
 }) {
   const supabase = await getAdminSupabase();
 
+  const idToUse = payload.id || 1;
   const { error } = await supabase
     .from('profil_desa')
-    .update({
+    .upsert({
+      id: idToUse,
       tahun_berdiri: payload.tahun_berdiri,
       visi: payload.visi,
       misi: payload.misi,
@@ -217,8 +221,7 @@ export async function simpanProfilAction(payload: {
       batas_barat: payload.batas_barat,
       foto_kelurahan_url: payload.foto_kelurahan_url ?? null,
       updated_at: new Date().toISOString(),
-    })
-    .eq('id', payload.id);
+    });
 
   if (error) {
     console.error('Error simpan profil:', error);
@@ -287,14 +290,17 @@ export async function hapusLayananAction(id: number) {
   return { success: true };
 }
 
-export async function updateDemografiAction(updates: Array<{ id: number; jumlah: number }>) {
+export async function updateDemografiAction(updates: Array<{ id: number; jumlah: number; kategori?: string; label?: string }>) {
   const supabase = await getAdminSupabase();
 
   for (const item of updates) {
+    const upsertData: Record<string, unknown> = { id: item.id, jumlah: item.jumlah };
+    if (item.kategori) upsertData.kategori = item.kategori;
+    if (item.label) upsertData.label = item.label;
+
     const { error } = await supabase
       .from('demografi')
-      .update({ jumlah: item.jumlah })
-      .eq('id', item.id);
+      .upsert(upsertData);
 
     if (error) {
       console.error('Error update demografi:', error);
@@ -334,10 +340,13 @@ export async function simpanStrukturPegawaiAction(payload: {
     updateData.struktur_lengkap = payload.strukturLengkap;
   }
 
+  const idToUse = payload.id || 1;
   const { error } = await supabase
     .from('profil_desa')
-    .update(updateData)
-    .eq('id', payload.id);
+    .upsert({
+      id: idToUse,
+      ...updateData,
+    });
 
   if (error) {
     console.error('Error simpan struktur pegawai:', error);
