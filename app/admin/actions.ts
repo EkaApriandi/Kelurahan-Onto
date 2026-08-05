@@ -130,6 +130,32 @@ export async function hapusBeritaAction(id: number) {
   return { success: true };
 }
 
+export async function kirimPengaduanAction(payload: {
+  nama: string;
+  kontak: string;
+  kategori: string;
+  isi: string;
+}) {
+  const supabase = await getAdminSupabase();
+  const { error } = await supabase.from('pengaduan').insert({
+    nama: payload.nama,
+    kontak: payload.kontak,
+    kategori: payload.kategori,
+    isi: payload.isi,
+    status: 'baru',
+    created_at: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error('Error kirim pengaduan:', error);
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath('/admin/pengaduan');
+  revalidatePath('/admin');
+  return { success: true };
+}
+
 export async function updateStatusPengaduanAction(id: number, status: string) {
   const supabase = await getAdminSupabase();
   const { error } = await supabase.from('pengaduan').update({ status }).eq('id', id);

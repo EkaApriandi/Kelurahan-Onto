@@ -94,8 +94,8 @@ export default function LoginAdmin() {
             <div className="w-10 h-10 rounded-xl bg-white p-0.5 shadow-md flex items-center justify-center flex-shrink-0 border border-white/40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo-bantaeng.jpg"
-                alt="Logo Kabupaten Bantaeng"
+                src="/logo-kelurahan-onto.jpg"
+                alt="Logo Kelurahan Onto"
                 className="w-full h-full object-contain"
               />
             </div>

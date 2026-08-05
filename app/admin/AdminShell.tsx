@@ -36,8 +36,8 @@ export default function AdminShell({
           <div className="w-9 h-9 rounded-lg bg-white p-0.5 flex items-center justify-center flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo-bantaeng.jpg"
-              alt="Logo Kabupaten Bantaeng"
+              src="/logo-kelurahan-onto.jpg"
+              alt="Logo Kelurahan Onto"
               className="w-full h-full object-contain"
             />
           </div>
@@ -97,7 +97,7 @@ export default function AdminShell({
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-bantaeng.jpg" alt="Logo" className="w-full h-full object-contain" />
+              <img src="/logo-kelurahan-onto.jpg" alt="Logo Kelurahan Onto" className="w-full h-full object-contain" />
             </div>
             <div>
               <p className="text-xs font-extrabold text-white">Kelurahan Onto</p>

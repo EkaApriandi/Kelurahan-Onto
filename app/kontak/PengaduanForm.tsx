@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { kirimPengaduanAction } from '@/app/admin/actions';
 
 export default function PengaduanForm() {
   const [form, setForm] = useState({
@@ -16,15 +16,15 @@ export default function PengaduanForm() {
     e.preventDefault();
     setStatus('loading');
 
-    const { error } = await supabase.from('pengaduan').insert({
+    const res = await kirimPengaduanAction({
       nama: form.nama,
       kontak: form.kontak,
       kategori: form.kategori,
       isi: form.isi,
     });
 
-    if (error) {
-      console.error(error);
+    if (!res.success) {
+      console.error(res.message);
       setStatus('error');
       return;
     }

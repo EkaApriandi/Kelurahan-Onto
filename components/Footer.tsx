@@ -11,8 +11,8 @@ export default function Footer() {
               <div className="w-10 h-10 rounded-lg overflow-hidden bg-white flex items-center justify-center p-0.5 flex-shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/logo-bantaeng.jpg"
-                  alt="Logo Kabupaten Bantaeng"
+                  src="/logo-kelurahan-onto.jpg"
+                  alt="Logo Kelurahan Onto"
                   className="w-full h-full object-contain"
                 />
               </div>
