@@ -315,6 +315,51 @@ export async function updateDemografiAction(updates: Array<{ id: number; jumlah:
   return { success: true };
 }
 
+export async function updateRtRwAction(updates: Array<{ id?: number; nomor_rw: string; nomor_rt: string; jumlah_kk: number; jumlah_l: number; jumlah_p: number }>) {
+  const supabase = await getAdminSupabase();
+
+  for (const item of updates) {
+    const upsertData: Record<string, unknown> = {
+      nomor_rw: item.nomor_rw || '01',
+      nomor_rt: item.nomor_rt || '01',
+      jumlah_kk: Number(item.jumlah_kk) || 0,
+      jumlah_l: Number(item.jumlah_l) || 0,
+      jumlah_p: Number(item.jumlah_p) || 0,
+    };
+    if (item.id) upsertData.id = item.id;
+
+    const { error } = await supabase.from('rt_rw').upsert(upsertData);
+
+    if (error) {
+      console.error('Error update rt_rw:', error);
+      return { success: false, message: error.message };
+    }
+  }
+
+  revalidatePath('/kependudukan');
+  revalidatePath('/admin/kependudukan');
+  revalidatePath('/');
+
+  return { success: true };
+}
+
+export async function hapusRtRwAction(id: number) {
+  const supabase = await getAdminSupabase();
+  const { error } = await supabase.from('rt_rw').delete().eq('id', id);
+
+  if (error) {
+    console.error('Error hapus rt_rw:', error);
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath('/kependudukan');
+  revalidatePath('/admin/kependudukan');
+  revalidatePath('/');
+
+  return { success: true };
+}
+
+
 export async function simpanStrukturPegawaiAction(payload: {
   id: number;
   struktur: Array<{

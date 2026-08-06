@@ -15,6 +15,12 @@ export default async function AdminKependudukanPage() {
     .select('*')
     .order('id', { ascending: true });
 
+  const { data: rtRws } = await supabase
+    .from('rt_rw')
+    .select('*')
+    .order('nomor_rw', { ascending: true })
+    .order('nomor_rt', { ascending: true });
+
   const defaultItems = [
     { id: 1, kategori: 'pekerjaan', label: 'Petani / Pekebun', jumlah: 0 },
     { id: 2, kategori: 'pekerjaan', label: 'PNS / TNI / Polri', jumlah: 0 },
@@ -38,11 +44,14 @@ export default async function AdminKependudukanPage() {
     <AdminShell title="Kelola Data Kependudukan & Demografi" userEmail={user?.email ?? ''}>
       <div className="mb-6">
         <p className="text-xs font-semibold text-slate-500">
-          Perbarui jumlah statistik matapencaharian, tingkat pendidikan, dan kelompok usia penduduk Kelurahan Onto.
+          Perbarui jumlah total jiwa, total KK, Laki-Laki, Perempuan per RT/RW serta grafik statistik demografi Kelurahan Onto.
         </p>
       </div>
 
-      <DemografiForm items={items && items.length > 0 ? items : defaultItems} />
+      <DemografiForm
+        items={items && items.length > 0 ? items : defaultItems}
+        rtRws={rtRws ?? []}
+      />
     </AdminShell>
   );
 }

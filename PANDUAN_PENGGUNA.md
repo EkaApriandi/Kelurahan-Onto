@@ -28,7 +28,14 @@
 4. [Panduan Administrasi Supabase Dashboard](#4-panduan-administrasi-supabase-dashboard)
    - [4.1 Manajemen Pengguna & Auto Confirm User](#41-manajemen-pengguna--auto-confirm-user)
    - [4.2 Pemulihan Akses & Reset Password Pengurus](#42-pemulihan-akses--reset-password-pengurus)
-5. [Tanya Jawab & Troubleshooting (FAQ)](#5-tanya-jawab--troubleshooting-faq)
+5. [Panduan Troubleshooting & Maintenance Admin (Kendala Teknis Web)](#5-panduan-troubleshooting--maintenance-admin-kendala-teknis-web)
+   - [5.1 Lupa Password & Akun Admin Terkunci](#51-lupa-password--akun-admin-terkunci)
+   - [5.2 Website Tidak Bisa Diakses / Server Down](#52-website-tidak-bisa-diakses--server-down)
+   - [5.3 Foto Gagal Upload di Panel Admin](#53-foto-gagal-upload-di-panel-admin)
+   - [5.4 Berita, Layanan, atau Pengaduan Tidak Tampil / Tidak Updating](#54-berita-layanan-atau-pengaduan-tidak-tampil--tidak-updating)
+   - [5.5 Penanganan Error Database & Supabase (Database Crash/Paused)](#55-penanganan-error-database--supabase-database-crashpaused)
+   - [5.6 Prosedur Hubungi Tim Developer / Pengembang](#56-prosedur-hubungi-tim-developer--pengembang)
+6. [Tanya Jawab Umum & FAQ](#6-tanya-jawab-umum--faq)
 
 ---
 
@@ -117,7 +124,8 @@ Sistem Informasi Kelurahan Onto dibangun menggunakan arsitektur modern Next.js A
 * **Edit & Hapus Layanan**: Perbarui persyaratan atau hapus layanan yang tidak berlaku lagi.
 
 ### 3.7 Modul Kelola Data Kependudukan (`/admin/kependudukan`)
-* Memperbarui angka statistik kelompok umur, gender, pendidikan, pekerjaan, agama, dan data per RW.
+* **Data RT / RW (Total Jiwa, KK, Gender)**: Memperbarui jumlah KK, Laki-Laki, dan Perempuan per RT/RW. Angka Total Jiwa, Total KK, Laki-Laki, dan Perempuan di halaman utama & kependudukan akan otomatis terkalkulasi.
+* **Grafik Demografi**: Memperbarui angka statistik kelompok umur, tingkat pendidikan, dan pekerjaan warga.
 
 ### 3.8 Modul Kelola Berita & Upload Foto (`/admin/berita`)
 * **Tambah Berita (`/admin/berita/baru`)**: Upload foto utama (otomatis dikompresi), isi konten, tentukan kategori, dan atur status (*Publish* / *Draft*).
@@ -162,14 +170,127 @@ Fitur ini memungkinkan pengurus kelurahan untuk memperbarui **Email Login** dan 
 
 ---
 
-## 5. TANYA JAWAB & TROUBLESHOOTING (FAQ)
+## 5. PANDUAN TROUBLESHOOTING & MAINTENANCE ADMIN (KENDALA TEKNIS WEB)
 
-* **Q: Mengapa tombol login admin tidak ada di halaman utama?**
-  * *Jawab*: Tautan sengaja disembunyikan demi keamanan agar masyarakat tidak sembarangan mencoba login. Admin cukup mengetik `/admin` di URL browser.
-* **Q: Bagaimana jika saya ingin mengubah password atau email pengurus?**
-  * *Jawab*: Buka menu **Pengaturan Akun** (`/admin/pengaturan`) di dalam Panel Admin untuk mengubah email dan password secara mandiri.
+Bab ini memuat panduan komprehensif penanganan masalah (*troubleshooting*) operasional yang wajib dipahami oleh Admin Portal Kelurahan Onto jika terjadi kendala teknis.
+
+---
+
+### 5.1 Lupa Password & Akun Admin Terkunci
+
+* **Gejala**: Admin gagal masuk ke `/admin/login`, muncul notifikasi `Invalid login credentials` atau `Email not confirmed`.
+* **Penyebab**: 
+  1. Salah memasukkan kata sandi lebih dari 5 kali.
+  2. Lupa kombinasi kata sandi baru.
+  3. Akun belum status *Confirmed* di database Supabase.
+* **Langkah Penyelesaian & Solusi**:
+  1. **Reset Mandiri (via Super Admin / Supabase)**:
+     - Minta Super Admin / Pengelola Akses untuk masuk ke [Supabase Dashboard](https://supabase.com/dashboard).
+     - Navigasi ke menu **Authentication** -> **Users**.
+     - Cari email akun admin yang bermasalah.
+     - Klik titik tiga (**`...`**) di ujung kanan baris akun -> Pilih **"Reset Password"** atau **"Update Password"**.
+     - Masukkan password sementara yang baru (minimal 6 karakter) lalu berikan ke admin yang bersangkutan.
+  2. **Verifikasi Akun Belum Terkonfirmasi**:
+     - Jika muncul error *Email not confirmed*, klik titik tiga (**`...`**) pada baris user -> Pilih **"Confirm User"**.
+  3. **Rekomendasi Setelah Login**:
+     - Setelah berhasil login dengan password sementara, segera buka menu **Pengaturan Akun (`/admin/pengaturan`)** untuk memperbarui kata sandi secara mandiri.
+
+---
+
+### 5.2 Website Tidak Bisa Diakses / Server Down
+
+* **Gejala**: Halaman web menampilkan `502 Bad Gateway`, `504 Gateway Timeout`, `404 Not Found`, atau *Network Error* / loading terus menerus.
+* **Penyebab**:
+  1. Koneksi internet perangkat admin/pengunjung terputus.
+  2. Layanan hosting (Vercel / Netlify) sedang *maintenance* atau mengalami gangguan server (*outage*).
+  3. Layanan Supabase Backend/Database tertahan (*paused*) karena masa inaktif.
+* **Langkah Penyelesaian & Solusi**:
+  1. **Cek Koneksi Internet**: Buka situs umum lain (misal: Google/YouTube) untuk memastikan koneksi internet lokal stabil.
+  2. **Hard Refresh Browser**: Tekan tombol `Ctrl + F5` (Windows) atau `Cmd + Shift + R` (Mac) untuk membersihkan *cache* browser temporary.
+  3. **Cek Status Hosting & Backend**:
+     - Buka Dashboard Vercel / Netlify tempat proyek di-deploy untuk mengecek status build & deployment.
+     - Jika muncul pesan error database, lanjut ke langkah **5.5 Penanganan Error Database**.
+
+---
+
+### 5.3 Foto Gagal Upload di Panel Admin
+
+* **Gejala**: Saat menambah/mengedit Berita (`/admin/berita`) atau Foto Pegawai (`/admin/pegawai`), muncul error `Failed to upload image`, `Payload Too Large`, atau foto tidak berubah.
+* **Penyebab**:
+  1. Ukuran file gambar terlalu besar (melebihi 5 MB).
+  2. Format file gambar tidak didukung (misalnya `.heic`, `.bmp`, `.pdf`, atau `.exe`).
+  3. *Bucket Storage* pada Supabase belum diatur ke status *Public* atau kebijakan RLS (*Row Level Security*) memblokir akses upload.
+* **Langkah Penyelesaian & Solusi**:
+  1. **Kompresi File Gambar**: 
+     - Pastikan ukuran foto kurang dari 2 MB (gunakan alat gratis seperti [TinyPNG](https://tinypng.com) atau [ILoveIMG](https://iloveimg.com) sebelum di-upload).
+  2. **Format File Gambar**:
+     - Pastikan file berformat `.jpg`, `.jpeg`, `.png`, atau `.webp`.
+  3. **Periksa Kebijakan Supabase Storage (Bagi Pengelola Teknis)**:
+     - Buka Supabase Dashboard -> **Storage** -> **Buckets**.
+     - Pastikan bucket `berita` dan `pegawai` sudah memiliki status **Public**.
+     - Pastikan *Storage Policy* memberikan izin `INSERT` dan `SELECT` untuk authenticated user / public.
+
+---
+
+### 5.4 Berita, Layanan, atau Pengaduan Tidak Tampil / Tidak Updating
+
+* **Gejala**: Data yang baru ditambahkan/diubah di Panel Admin tidak muncul di halaman publik masyarakat.
+* **Penyebab**:
+  1. Status postingan berita masih diset ke `Draft` bukan `Publish`.
+  2. Fitur *Static Site Generation* / Cache di Next.js belum ter-refresh.
+* **Langkah Penyelesaian & Solusi**:
+  1. **Cek Status Draf Berita**: Buka menu `/admin/berita`, pastikan tombol sakelar status berita berwarna hijau atau bertuliskan **Published**.
+  2. **Buka Halaman Publik via Incognito / Private Window**: Untuk memastikan bukan karena cache browser pribadi admin.
+  3. **Refresh Cache Server**: Lakukan reload halaman publik. Apabila data pengaduan/layanan tidak tersimpan sama sekali, periksa koneksi Supabase.
+
+---
+
+### 5.5 Penanganan Error Database & Supabase (Database Crash/Paused)
+
+* **Gejala**: Muncul pesan error seperti `Database connection lost`, `Project is paused`, `JWT expired`, `401 Unauthorized`, atau `Error 500 Internal Server Error` saat membuka panel admin.
+* **Penyebab**:
+  1. **Project Supabase Inaktif (Paused)**: Proyek Supabase tier gratis otomatis mengalami mode *pause* jika tidak ada trafik API selama lebih dari 7 hari berturut-turut.
+  2. **API Key Expired / Invalid**: Kunci `NEXT_PUBLIC_SUPABASE_URL` atau `NEXT_PUBLIC_SUPABASE_ANON_KEY` pada file environment (`.env.local`) salah atau telah di-reset.
+  3. **Batas Quota Kuota Database Habis**: Penyimpanan database melebihi limit.
+* **Langkah Penyelesaian & Solusi**:
+  1. **Unpause Proyek Supabase**:
+     - Buka [Supabase Dashboard](https://supabase.com/dashboard).
+     - Jika proyek bertuliskan **Paused**, klik tombol **"Restore Project"** atau **"Unpause"**.
+     - Tunggu sekitar 1–3 menit hingga status database kembali berwarna hijau (*Active*).
+  2. **Verifikasi Kredensial Environment Variables**:
+     - Masuk ke Supabase Dashboard -> **Project Settings** -> **API**.
+     - Salin **Project URL** dan **anon / public key**.
+     - Buka pengaturan Environment Variables di Hosting (Vercel/Netlify) atau `.env.local`, lalu perbarui nilai kunci tersebut jika ada perubahan.
+  3. **Cek Kebijakan RLS (Row Level Security)**:
+     - Jika query data gagal (misal data pengaduan tidak bisa di-submit warga), buka Supabase -> **Table Editor** -> pilih tabel yang bermasalah -> buka menu **Policies** -> Pastikan izin `INSERT` / `SELECT` sudah diaktifkan.
+
+---
+
+### 5.6 Prosedur Hubungi Tim Developer / Pengembang
+
+Jika terjadi kendala teknis tingkat lanjut yang tidak dapat diselesaikan melalui langkah troubleshooting standar di atas, pengurus kelurahan dapat menghubungi tim pengembang teknis dengan prosedur berikut:
+
+1. **Catat Informasi Detail Kendala**:
+   - Ambil tangkapan layar (*screenshot*) pesan error yang muncul pada layar.
+   - Catat waktu terjadinya error dan menu/halaman tempat error muncul.
+2. **Kontak Tim Pengembang (Handover Technical Support)**:
+   - **Tim Pengembang**: Tim KKN-T 116 Universitas Hasanuddin (Kelurahan Onto)
+   - **WhatsApp Penanggung Jawab Teknis Web**: `+62 821-XXXX-XXXX` / `+62 852-XXXX-XXXX`
+   - **Email Dukungan Teknis**: `kkn116.onto@gmail.com` / `dev.kelurahanonto@gmail.com`
+   - **Repositori Source Code (GitHub)**: `https://github.com/EkaApriandi/Kelurahan-Onto`
+3. **Penanganan Darurat Akses Kredensial**:
+   - Seluruh kredensial tingkat tinggi (Akun Supabase Master, Hosting Vercel, Registrar Domain) tersimpan di dokumen **Handover Kredensial Resmi** yang diserahkan secara terpisah kepada Lurah / Sekretaris Kelurahan Onto.
+
+---
+
+## 6. TANYA JAWAB UMUM & FAQ
+
+* **Q: Mengapa tombol login admin tidak ada di halaman utama portal publik?**
+  * *Jawab*: Tautan sengaja disembunyikan demi keamanan agar masyarakat umum tidak sembarangan mengakses atau mencoba login. Admin cukup mengetik `/admin` langsung pada bilah alamat URL browser.
 * **Q: Apakah pengaduan warga bisa langsung diekspor ke Excel?**
-  * *Jawab*: Ya, admin dapat mengklik tombol **Ekspor Data (CSV)** pada menu Kelola Pengaduan.
+  * *Jawab*: Ya, admin dapat mengklik tombol **Ekspor Data (CSV)** pada menu Kelola Pengaduan di Panel Admin (`/admin/pengaduan`). File `.csv` dapat dibuka secara langsung di Microsoft Excel atau Google Sheets.
+* **Q: Bagaimana jika foto lurah atau pejabat kelurahan perlu diganti?**
+  * *Jawab*: Buka menu **Kelola Pejabat & Pegawai** (`/admin/pegawai`), klik tombol **Edit** pada pejabat yang bersangkutan, upload foto baru berukuran < 2MB, lalu klik **Simpan**.
 
 ---
 *Sistem Informasi Kelurahan Onto &copy; 2026 — Dikelola oleh Pemerintah Kelurahan Onto, Kab. Bantaeng*
