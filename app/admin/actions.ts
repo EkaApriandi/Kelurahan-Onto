@@ -251,8 +251,7 @@ export async function simpanProfilAction(payload: {
 
     const idToUse = payload.id || 1;
 
-    const dataSave = {
-      id: idToUse,
+    const updatePayload = {
       tahun_berdiri: payload.tahun_berdiri,
       visi: payload.visi,
       misi: payload.misi,
@@ -272,10 +271,10 @@ export async function simpanProfilAction(payload: {
 
     let error;
     if (existing) {
-      const res = await supabase.from('profil_desa').update(dataSave).eq('id', idToUse);
+      const res = await supabase.from('profil_desa').update(updatePayload).eq('id', idToUse);
       error = res.error;
     } else {
-      const res = await supabase.from('profil_desa').insert(dataSave);
+      const res = await supabase.from('profil_desa').insert({ ...updatePayload, id: idToUse });
       error = res.error;
     }
 
