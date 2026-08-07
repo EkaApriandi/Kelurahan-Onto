@@ -124,17 +124,28 @@ export default async function KontakPengaduan() {
                   </div>
                 )}
 
-                {info?.medsos && (
-                  <div className="flex items-start gap-2.5">
-                    <span className="text-base leading-none">📸</span>
-                    <div>
-                      <span className="font-bold text-slate-400 uppercase text-[10px] block">Instagram Resmi:</span>
-                      <p className="font-bold text-slate-900 mt-0.5">
-                        {info.medsos.startsWith('@') ? info.medsos : `@${info.medsos}`}
-                      </p>
+                {(() => {
+                  const rawMedsos = info?.medsos ?? 'kelurahanonto';
+                  const displayMedsos = rawMedsos.toLowerCase().includes('onto balla tujua') ? 'kelurahanonto' : rawMedsos;
+                  const formattedMedsos = displayMedsos.startsWith('@') ? displayMedsos : `@${displayMedsos}`;
+                  const igUsername = displayMedsos.replace(/^@/, '').trim();
+                  return (
+                    <div className="flex items-start gap-2.5">
+                      <span className="text-base leading-none">📸</span>
+                      <div>
+                        <span className="font-bold text-slate-400 uppercase text-[10px] block">Instagram Resmi:</span>
+                        <a
+                          href={`https://instagram.com/${igUsername}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-bold text-slate-900 hover:text-red-800 hover:underline mt-0.5 block"
+                        >
+                          {formattedMedsos}
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             </div>
           </div>
