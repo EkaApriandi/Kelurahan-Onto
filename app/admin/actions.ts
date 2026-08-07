@@ -51,18 +51,26 @@ export async function logoutAction() {
 
 export async function updatePasswordAction(newPassword: string) {
   try {
-    await requireAuthUser();
-    const supabase = await createServerSupabase();
+    const user = await requireAuthUser();
 
     if (!newPassword || newPassword.length < 6) {
       return { success: false, message: 'Kata sandi baru minimal harus 6 karakter.' };
     }
 
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-
-    if (error) {
-      console.error('Error update password:', error);
-      return { success: false, message: error.message };
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      const adminSupabase = await getAdminSupabase();
+      const { error } = await adminSupabase.auth.admin.updateUserById(user.id, { password: newPassword });
+      if (error) {
+        console.error('Error update password (admin):', error);
+        return { success: false, message: error.message };
+      }
+    } else {
+      const serverSupabase = await createServerSupabase();
+      const { error } = await serverSupabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        console.error('Error update password:', error);
+        return { success: false, message: error.message };
+      }
     }
 
     return { success: true };
@@ -73,18 +81,29 @@ export async function updatePasswordAction(newPassword: string) {
 
 export async function updateEmailAction(newEmail: string) {
   try {
-    await requireAuthUser();
-    const supabase = await createServerSupabase();
+    const user = await requireAuthUser();
 
     if (!newEmail || !newEmail.includes('@')) {
       return { success: false, message: 'Alamat email tidak valid.' };
     }
 
-    const { error } = await supabase.auth.updateUser({ email: newEmail });
-
-    if (error) {
-      console.error('Error update email:', error);
-      return { success: false, message: error.message };
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      const adminSupabase = await getAdminSupabase();
+      const { error } = await adminSupabase.auth.admin.updateUserById(user.id, {
+        email: newEmail,
+        email_confirm: true,
+      });
+      if (error) {
+        console.error('Error update email (admin):', error);
+        return { success: false, message: error.message };
+      }
+    } else {
+      const serverSupabase = await createServerSupabase();
+      const { error } = await serverSupabase.auth.updateUser({ email: newEmail });
+      if (error) {
+        console.error('Error update email:', error);
+        return { success: false, message: error.message };
+      }
     }
 
     return { success: true };
