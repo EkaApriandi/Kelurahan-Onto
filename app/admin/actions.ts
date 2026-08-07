@@ -269,17 +269,28 @@ export async function simpanProfilAction(payload: {
     };
 
     let error;
+    let count: number | null = null;
     if (existing) {
-      const res = await supabase.from('profil_desa').update(updatePayload).eq('id', idToUse);
+      const res = await supabase.from('profil_desa').update(updatePayload, { count: 'exact' }).eq('id', idToUse);
       error = res.error;
+      count = res.count;
     } else {
-      const res = await supabase.from('profil_desa').insert(updatePayload);
+      const res = await supabase.from('profil_desa').insert(updatePayload, { count: 'exact' });
       error = res.error;
+      count = res.count;
     }
 
     if (error) {
       console.error('Error simpan profil:', error);
       return { success: false, message: error.message };
+    }
+
+    if (count === 0) {
+      console.error('Error simpan profil: 0 baris diperbarui.');
+      return {
+        success: false,
+        message: 'Database tidak memperbarui baris (0 rows updated). Mohon pastikan SUPABASE_SERVICE_ROLE_KEY sudah ditambahkan pada file .env.local atau RLS policy pada tabel profil_desa di Supabase mengizinkan UPDATE.',
+      };
     }
 
     revalidatePath('/profil', 'page');
