@@ -61,7 +61,7 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_SIZE = 1000;
+        const MAX_SIZE = 800;
         let width = img.width;
         let height = img.height;
 
@@ -83,7 +83,7 @@ export default function BeritaForm({ data }: { data?: BeritaData }) {
         const ctx = canvas.getContext('2d');
         if (ctx) {
           ctx.drawImage(img, 0, 0, width, height);
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
           setForm((f) => ({ ...f, gambar: compressedBase64 }));
         }
         setCompressing(false);
