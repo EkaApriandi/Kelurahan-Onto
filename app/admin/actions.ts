@@ -268,34 +268,18 @@ export async function simpanProfilAction(payload: {
       updated_at: new Date().toISOString(),
     };
 
-    let error: { message: string } | null = null;
-    let savedData: unknown[] | null = null;
-
+    let error;
     if (existing) {
-      const res = await supabase.from('profil_desa').update(updatePayload).eq('id', idToUse).select();
+      const res = await supabase.from('profil_desa').update(updatePayload).eq('id', idToUse);
       error = res.error;
-      savedData = res.data;
-
-      // Fallback jika id tidak match atau RLS eq filter menghambat
-      if (!error && (!savedData || savedData.length === 0)) {
-        const resFallback = await supabase.from('profil_desa').update(updatePayload).neq('id', 0).select();
-        error = resFallback.error;
-        savedData = resFallback.data;
-      }
     } else {
-      const res = await supabase.from('profil_desa').insert(updatePayload).select();
+      const res = await supabase.from('profil_desa').insert(updatePayload);
       error = res.error;
-      savedData = res.data;
     }
 
     if (error) {
       console.error('Error simpan profil:', error);
       return { success: false, message: error.message };
-    }
-
-    if (!savedData || savedData.length === 0) {
-      console.error('Error simpan profil: 0 baris diperbarui.');
-      return { success: false, message: 'Data tidak dapat diperbarui di database. Periksa hak akses (RLS) di Supabase.' };
     }
 
     revalidatePath('/profil', 'page');
