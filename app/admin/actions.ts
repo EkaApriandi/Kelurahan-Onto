@@ -278,12 +278,12 @@ export async function simpanProfilAction(payload: {
 
       // Fallback jika id tidak match atau RLS eq filter menghambat
       if (!error && (!savedData || savedData.length === 0)) {
-        const resFallback = await supabase.from('profil_desa').update(updatePayload).select();
+        const resFallback = await supabase.from('profil_desa').update(updatePayload).neq('id', 0).select();
         error = resFallback.error;
         savedData = resFallback.data;
       }
     } else {
-      const res = await supabase.from('profil_desa').insert({ ...updatePayload, id: idToUse }).select();
+      const res = await supabase.from('profil_desa').insert(updatePayload).select();
       error = res.error;
       savedData = res.data;
     }
