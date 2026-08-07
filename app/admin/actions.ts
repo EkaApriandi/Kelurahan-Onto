@@ -375,13 +375,18 @@ export async function updateDemografiAction(updates: Array<{ id: number; jumlah:
     const supabase = await getAdminSupabase();
 
     for (const item of updates) {
-      const upsertData: Record<string, unknown> = { id: item.id, jumlah: item.jumlah };
-      if (item.kategori) upsertData.kategori = item.kategori;
-      if (item.label) upsertData.label = item.label;
+      const payloadData: Record<string, unknown> = { jumlah: Number(item.jumlah) || 0 };
+      if (item.kategori) payloadData.kategori = item.kategori;
+      if (item.label) payloadData.label = item.label;
 
-      const { error } = await supabase
-        .from('demografi')
-        .upsert(upsertData, { onConflict: 'id' });
+      let error;
+      if (item.id && item.id > 0) {
+        const res = await supabase.from('demografi').update(payloadData).eq('id', item.id);
+        error = res.error;
+      } else {
+        const res = await supabase.from('demografi').insert(payloadData);
+        error = res.error;
+      }
 
       if (error) {
         console.error('Error update demografi:', error);
