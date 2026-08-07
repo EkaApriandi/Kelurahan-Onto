@@ -249,7 +249,8 @@ export async function simpanProfilAction(payload: {
     await requireAuthUser();
     const supabase = await getAdminSupabase();
 
-    const idToUse = payload.id || 1;
+    const { data: existing } = await supabase.from('profil_desa').select('id').limit(1).maybeSingle();
+    const idToUse = existing?.id ?? payload.id ?? 1;
 
     const updatePayload = {
       tahun_berdiri: payload.tahun_berdiri,
@@ -267,15 +268,24 @@ export async function simpanProfilAction(payload: {
       updated_at: new Date().toISOString(),
     };
 
-    const { data: existing } = await supabase.from('profil_desa').select('id').eq('id', idToUse).maybeSingle();
+    let error: { message: string } | null = null;
+    let savedData: unknown[] | null = null;
 
-    let error;
     if (existing) {
-      const res = await supabase.from('profil_desa').update(updatePayload).eq('id', idToUse);
+      const res = await supabase.from('profil_desa').update(updatePayload).eq('id', idToUse).select();
       error = res.error;
+      savedData = res.data;
+
+      // Fallback jika id tidak match atau RLS eq filter menghambat
+      if (!error && (!savedData || savedData.length === 0)) {
+        const resFallback = await supabase.from('profil_desa').update(updatePayload).select();
+        error = resFallback.error;
+        savedData = resFallback.data;
+      }
     } else {
-      const res = await supabase.from('profil_desa').insert({ ...updatePayload, id: idToUse });
+      const res = await supabase.from('profil_desa').insert({ ...updatePayload, id: idToUse }).select();
       error = res.error;
+      savedData = res.data;
     }
 
     if (error) {
@@ -283,9 +293,15 @@ export async function simpanProfilAction(payload: {
       return { success: false, message: error.message };
     }
 
-    revalidatePath('/profil');
-    revalidatePath('/admin/profil');
-    revalidatePath('/');
+    if (!savedData || savedData.length === 0) {
+      console.error('Error simpan profil: 0 baris diperbarui.');
+      return { success: false, message: 'Data tidak dapat diperbarui di database. Periksa hak akses (RLS) di Supabase.' };
+    }
+
+    revalidatePath('/profil', 'page');
+    revalidatePath('/admin/profil', 'page');
+    revalidatePath('/', 'page');
+    revalidatePath('/', 'layout');
 
     return { success: true };
   } catch (err: unknown) {
