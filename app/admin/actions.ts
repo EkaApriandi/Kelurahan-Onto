@@ -83,25 +83,37 @@ export async function updateEmailAction(newEmail: string) {
   try {
     const user = await requireAuthUser();
 
-    if (!newEmail || !newEmail.includes('@')) {
+    const cleanEmail = newEmail.toLowerCase().trim();
+
+    if (!cleanEmail || !cleanEmail.includes('@')) {
       return { success: false, message: 'Alamat email tidak valid.' };
+    }
+
+    if (user.email && cleanEmail === user.email.toLowerCase().trim()) {
+      return { success: false, message: 'Alamat email baru yang dimasukkan sudah merupakan email aktif Anda saat ini.' };
     }
 
     if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
       const adminSupabase = await getAdminSupabase();
       const { error } = await adminSupabase.auth.admin.updateUserById(user.id, {
-        email: newEmail,
+        email: cleanEmail,
         email_confirm: true,
       });
       if (error) {
         console.error('Error update email (admin):', error);
+        if (error.message.includes('invalid') || error.message.includes('already')) {
+          return { success: false, message: `Email "${cleanEmail}" tidak dapat digunakan (sudah terdaftar atau merupakan email aktif Anda saat ini).` };
+        }
         return { success: false, message: error.message };
       }
     } else {
       const serverSupabase = await createServerSupabase();
-      const { error } = await serverSupabase.auth.updateUser({ email: newEmail });
+      const { error } = await serverSupabase.auth.updateUser({ email: cleanEmail });
       if (error) {
         console.error('Error update email:', error);
+        if (error.message.includes('invalid') || error.message.includes('already')) {
+          return { success: false, message: `Email "${cleanEmail}" tidak dapat digunakan (sudah terdaftar atau merupakan email aktif Anda saat ini).` };
+        }
         return { success: false, message: error.message };
       }
     }
